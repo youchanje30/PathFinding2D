@@ -12,4 +12,3 @@ static func greater(a, b): return a < b
 static func less_by_first(a, b): return a[0] > b[0]
 ## 첫 번째 요소를 기준으로 비교하는 함수
 static func greater_by_first(a, b): return a[0] < b[0]
-

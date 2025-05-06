@@ -68,4 +68,3 @@ func push_heap(holeIndex, val):
 	pq[holeIndex] = val
 
 #endregion
-
