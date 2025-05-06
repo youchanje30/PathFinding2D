@@ -7,7 +7,6 @@ class_name PQ
 ## 우선순위 큐를 저장하는 배열입니다.
 var pq = []
 
-# var operator = func(a, b): return a < b
 
 ## 비교 연산자 함수입니다. 기본값은 최소 힙입니다.
 var operator = func(a, b): return a > b
@@ -16,6 +15,16 @@ var operator = func(a, b): return a > b
 func _init():
 	pq = []
 
+
+#region Comparator Methods
+## 비교 연산자를 설정합니다.
+func set_comparator(new_operator):
+	operator = new_operator
+#endregion
+
+
+
+#region Priority Queue Methods
 ## 큐가 비어있는지 확인합니다.
 ## 비어있을 경우 True, 비어있지 않을 경우 False를 반환합니다.
 func empty():
@@ -57,3 +66,6 @@ func push_heap(holeIndex, val):
 		holeIndex = parent
 		parent = (holeIndex - 1) / 2
 	pq[holeIndex] = val
+
+#endregion
+
