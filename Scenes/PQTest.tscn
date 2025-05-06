@@ -1,10 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://dqmcrbu60fqrr"]
+[gd_scene load_steps=10 format=3 uid="uid://dqmcrbu60fqrr"]
 
-[ext_resource type="Script" uid="uid://cd57qp0lebq4t" path="res://Scripts/PQTest.gd" id="1_7o5jn"]
 [ext_resource type="Texture2D" uid="uid://b1ne2y5ded8rc" path="res://Resources/Tilemap_Atlas.png" id="2_2daxm"]
 [ext_resource type="Script" uid="uid://c53qsahfti4x4" path="res://Scripts/Boards/InputController.gd" id="2_w6h7g"]
 [ext_resource type="Script" uid="uid://c1vhp18ryugpv" path="res://Scripts/Boards/TileController.gd" id="3_43afh"]
 [ext_resource type="Script" uid="uid://bdfhsqttajokj" path="res://Scripts/Boards/BoardData.gd" id="3_c6wt6"]
+[ext_resource type="Script" uid="uid://n7hd0mn5ef38" path="res://Scripts/PathFinder/BFSPathFinding.gd" id="6_0yg5a"]
+[ext_resource type="Script" uid="uid://ddi4hrwx1mt4e" path="res://Scripts/PathFinder/DFSPathFinding.gd" id="6_aanre"]
+[ext_resource type="Script" uid="uid://dpsgwrhquro8r" path="res://Scripts/PathFinder/AstarPathFinding.gd" id="7_aanre"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_43afh"]
 texture = ExtResource("2_2daxm")
@@ -17,20 +19,34 @@ texture = ExtResource("2_2daxm")
 [sub_resource type="TileSet" id="TileSet_7o5jn"]
 sources/0 = SubResource("TileSetAtlasSource_43afh")
 
-[node name="Node" type="Node"]
-script = ExtResource("1_7o5jn")
-test_input = Array[int]([1, 3, 2, 4, 5, 6])
+[node name="PathFinding2D" type="Node"]
 
 [node name="InputController" type="Node" parent="." node_paths=PackedStringArray("board_data", "tileMapLayer")]
 script = ExtResource("2_w6h7g")
 board_data = NodePath("../BoardData")
 tileMapLayer = NodePath("../TileMapLayer")
 
-[node name="BoardData" type="Node" parent="."]
+[node name="BoardData" type="Node" parent="." node_paths=PackedStringArray("path_finding_strategy")]
 script = ExtResource("3_c6wt6")
+path_finding_strategy = NodePath("../PathFindings/AStar")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." node_paths=PackedStringArray("tileMapLayer", "board_data")]
 tile_set = SubResource("TileSet_7o5jn")
 script = ExtResource("3_43afh")
 tileMapLayer = NodePath(".")
 board_data = NodePath("../BoardData")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(802, 778)
+zoom = Vector2(0.5, 0.5)
+
+[node name="PathFindings" type="Node" parent="."]
+
+[node name="BFS" type="Node" parent="PathFindings"]
+script = ExtResource("6_0yg5a")
+
+[node name="DFS" type="Node" parent="PathFindings"]
+script = ExtResource("6_aanre")
+
+[node name="AStar" type="Node" parent="PathFindings"]
+script = ExtResource("7_aanre")

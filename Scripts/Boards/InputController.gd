@@ -1,6 +1,6 @@
 extends Node
 
-@export var board_data : Node
+@export var board_data : BoardData
 @export var tileMapLayer : TileMapLayer
 
 var is_left_dragging := false
@@ -65,6 +65,5 @@ func _apply_wall(mouse_pos, is_create):
 		board_data.set_cell(x, y, 0) # 벽 삭제
 
 func _find_path():
-	# 여기에 최단 경로 알고리즘을 구현하거나 호출하세요.
-	# 예시: board_data.find_path(start_pos, end_pos)
 	print("최단 경로 탐색 실행: ", start_pos, "→", end_pos)
+	board_data.path_find(start_pos, end_pos)

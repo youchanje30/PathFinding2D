@@ -1,10 +1,13 @@
 extends Node
-
+class_name BoardData
 
 ## 판의 최대 가로 크기
 @export var max_x : int = 100
 ## 판의 최대 세로 크기
 @export var max_y : int = 100
+
+## 경로 탐색 전략
+@export var path_finding_strategy : IPathFindingStrategy
 
 var board : Array[Array] = []
 
@@ -27,7 +30,7 @@ func init_board(_max_x : int, _max_y : int):
 func reset_board():
 	for i in range(max_y):
 		for j in range(max_x):
-			board[i][j] = false
+			board[i][j] = [false, 0]
 
 ## 유효한 위치 인지 확인합니다.
 ## 유효할 경우 true, 유효하지 않을 경우 false를 반환합니다.
@@ -37,10 +40,33 @@ func is_valid_position(x : int, y : int) -> bool:
 ## 방문한 위치 인지 확인합니다.
 ## 방문한 경우 true, 방문하지 않은 경우 false를 반환합니다.
 func is_visited(x : int, y : int) -> bool:
-	return board[x][y]
+	return board[y][x][0]
 
 ## 셀의 값을 변경하고, 변경 신호를 발생시킵니다.
 func set_cell(x: int, y: int, value):
-	if is_valid_position(x, y):
-		board[y][x] = value
-		emit_signal("cell_changed", x, y, value)
+	if not is_valid_position(x, y): return
+	board[y][x][1] = value
+	emit_signal("cell_changed", x, y, value)
+
+
+
+#region Path Finding Methods
+
+func can_visit(x : int, y : int) -> bool:
+	return is_valid_position(x, y) and not is_visited(x, y) and board[y][x][1] != 2
+
+func visit(x : int, y : int):
+	board[y][x][0] = true
+	emit_signal("cell_changed", x, y, 1)
+
+func get_cell(x : int, y : int) -> int:
+	return board[y][x][1]
+
+func path_find(start : Vector2, end : Vector2):
+	board[start.y][start.x][0] = true
+	path_finding_strategy.path_find(self, start, end)
+
+func draw_path(path : Array[Vector2i]):
+	for cell in path:
+		emit_signal("cell_changed", cell[0], cell[1], 3)
+#endregion

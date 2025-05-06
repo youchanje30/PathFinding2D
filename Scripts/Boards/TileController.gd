@@ -1,7 +1,7 @@
 extends Node
 
 @export var tileMapLayer : TileMapLayer
-@export var board_data : Node
+@export var board_data : BoardData
 
 @export var max_x : int = 100
 @export var max_y : int = 100
@@ -30,4 +30,4 @@ func _on_cell_changed(x, y, value):
 		_:
 			tile_vector = Vector2i(0, 1) # 예외: 빈 칸
 	tileMapLayer.set_cell(Vector2i(x, y), 0, tile_vector)
-	print(tile_vector)
+	
