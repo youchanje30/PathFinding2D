@@ -1,4 +1,6 @@
-## 1칸에 1을 소모하는 DFS 최단경로 탐색 알고리즘
+## 1칸에 1을 소모하는 DFS 탐색 알고리즘
+## 최단 경로를 보장하기 위해서는 모든 방법을 확인해야 한다.
+## 즉, 최단 경로로는 부적합하다. 이를 위한 예시이다.
 extends IPathFindingStrategy
 
 var move_list : Array[Vector2i] = [

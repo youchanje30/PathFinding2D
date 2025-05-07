@@ -4,12 +4,18 @@ class_name IPathFindingStrategy
 
 var parents = []
 
+
+#region Utility
+func set_array(arr : Array, r : int, size : int, val):
+	arr.resize(0)
+	for i in range(r):
+		arr.append([])
+		arr[i].resize(size)
+		arr[i].fill(val)
+#endregion
+
 func init(max_x : int, max_y : int):
-	parents.resize(0)
-	for i in range(max_y):
-		parents.append([])
-		parents[i].resize(max_x)
-		parents[i].fill(Vector2i(-1, -1))
+	set_array(parents, max_y, max_x, Vector2i(-1, -1))
 
 func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 	init(board_data.max_x, board_data.max_y)
