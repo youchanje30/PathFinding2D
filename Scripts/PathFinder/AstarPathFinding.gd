@@ -39,11 +39,12 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 		for add in move_list:
 			var next_pos = pos + add
 			if not board_data.can_visit(next_pos.x, next_pos.y): continue
-			if cost + 1 >= dp[next_pos.y][next_pos.x]: continue
+			var cell_weight = board_data.get_cost(next_pos.x, next_pos.y)
+			if cost + cell_weight >= dp[next_pos.y][next_pos.x]: continue
 			await get_tree().create_timer(0.001).timeout
-			dp[next_pos.y][next_pos.x] = cost + 1
+			dp[next_pos.y][next_pos.x] = cost + cell_weight
 			parents[next_pos.y][next_pos.x] = pos
-			pq.push([cost + 1 + heuristic(next_pos, end), next_pos])
+			pq.push([dp[next_pos.y][next_pos.x] + heuristic(next_pos, end), next_pos])
 			if next_pos == end: found = true; break
 			board_data.visit(next_pos.x, next_pos.y)
 

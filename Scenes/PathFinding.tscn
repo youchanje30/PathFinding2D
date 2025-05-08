@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://dqmcrbu60fqrr"]
+[gd_scene load_steps=13 format=3 uid="uid://dqmcrbu60fqrr"]
 
 [ext_resource type="Script" uid="uid://c53qsahfti4x4" path="res://Scripts/Boards/InputController.gd" id="1_khmu4"]
 [ext_resource type="Script" uid="uid://bdfhsqttajokj" path="res://Scripts/Boards/BoardData.gd" id="2_g1fwc"]
 [ext_resource type="Texture2D" uid="uid://b1ne2y5ded8rc" path="res://Resources/Tilemap_Atlas.png" id="3_m1b2c"]
+[ext_resource type="Texture2D" uid="uid://bicr6jjglxw5i" path="res://Resources/Costable_Tilemap_Atlas.png" id="4_m1b2c"]
 [ext_resource type="Script" uid="uid://c1vhp18ryugpv" path="res://Scripts/Boards/TileController.gd" id="4_ti74c"]
 [ext_resource type="Script" uid="uid://n7hd0mn5ef38" path="res://Scripts/PathFinder/BFSPathFinding.gd" id="5_oc7cq"]
 [ext_resource type="Script" uid="uid://ddi4hrwx1mt4e" path="res://Scripts/PathFinder/DFSPathFinding.gd" id="6_vtqva"]
@@ -17,8 +18,26 @@ texture = ExtResource("3_m1b2c")
 1:1/0 = 0
 2:1/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_m1b2c"]
+texture = ExtResource("4_m1b2c")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+8:1/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+
 [sub_resource type="TileSet" id="TileSet_7o5jn"]
 sources/0 = SubResource("TileSetAtlasSource_43afh")
+sources/1 = SubResource("TileSetAtlasSource_m1b2c")
 
 [node name="PathFinding2D" type="Node"]
 
@@ -29,7 +48,7 @@ tileMapLayer = NodePath("../TileController")
 
 [node name="BoardData" type="Node" parent="." node_paths=PackedStringArray("path_finding_strategy")]
 script = ExtResource("2_g1fwc")
-path_finding_strategy = NodePath("../PathFindings/DFS")
+path_finding_strategy = NodePath("../PathFindings/AStar")
 
 [node name="TileController" type="TileMapLayer" parent="." node_paths=PackedStringArray("tileMapLayer", "board_data")]
 tile_set = SubResource("TileSet_7o5jn")
