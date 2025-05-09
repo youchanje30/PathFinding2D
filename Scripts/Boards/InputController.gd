@@ -48,22 +48,21 @@ func _apply_start_end(mouse_pos):
 	var pos = get_position(mouse_pos)
 	if start_pos == null:
 		start_pos = pos
-		board_data.set_cell(pos.x, pos.y, 3)
+		board_data.set_cell(pos.x, pos.y, board_data.TILE_START_END)
 	elif end_pos == null and pos != start_pos:
 		end_pos = pos
-		board_data.set_cell(pos.x, pos.y, 3)
+		board_data.set_cell(pos.x, pos.y, board_data.TILE_START_END)
 
 func _apply_weight(mouse_pos):
 	var pos = get_position(mouse_pos)
-	board_data.set_cell(pos.x, pos.y, weight_value, 1) # 선택된 가중치로 땅 설치
+	board_data.set_cell(pos.x, pos.y, board_data.TILE_EMPTY, weight_value) # 선택된 가중치로 땅 설치
 
 func _apply_wall(mouse_pos, is_create):
 	var pos = get_position(mouse_pos)
-	board_data.set_cell(pos.x, pos.y, -1 if is_create else 1)
+	board_data.set_cell(pos.x, pos.y, board_data.TILE_WALL if is_create else board_data.TILE_EMPTY)
 
 func _find_path():
 	print("최단 경로 탐색 실행: ", start_pos, "→", end_pos)
-	# board_data.path_find(start_pos, end_pos)
 	board_data.try_path_find(start_pos, end_pos)
 
 func get_position(mouse_pos):

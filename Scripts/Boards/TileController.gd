@@ -24,19 +24,25 @@ func _on_cell_changed(x, y, value):
 	# value에 따라 타일을 갱신하는 로직
 	var tile_vector := Vector2i(0, 1) # 기본값(빈 칸)
 	match value:
-		-1:
+		board_data.TILE_WALL:
 			tile_vector = Vector2i(0, 0) # 벽
-		0:
-			tile_vector = Vector2i(1, 0) # 빈 칸
-		1:
-			tile_vector = Vector2i(2, 0) # 방문한 칸
+		board_data.TILE_EMPTY:
+			# 가중치가 1~9인 땅에 대해 색상 지정
+			var cost = board_data.board[y][x][2]
+			if cost >= 1 and cost <= 9:
+				tile_vector = Vector2i(cost - 1, 1)
+			else:
+				tile_vector = Vector2i(0, 1) # 기본 빈 칸
+				# tile_vector = Vector2i(1, 0) # 기본 빈 칸
+		board_data.TILE_PATH:
+			tile_vector = Vector2i(2, 0) # 방문
 			visited_tiles.push_back(Vector2i(x, y))
-		2:
+		board_data.TILE_ROUTE:
 			tile_vector = Vector2i(3, 0) # 최단경로
-		3:
-			tile_vector = Vector2i(4, 0) # 시작 점
+		board_data.TILE_START_END:
+			tile_vector = Vector2i(4, 0) # 시작/도착점
 		_:
-			tile_vector = Vector2i(value - 4, 1) 
+			tile_vector = Vector2i(1, 1) # 기타(가중치 등)
 	tileMapLayer.set_cell(Vector2i(x, y), 1, tile_vector)
 	
 func _on_path_finding_started():

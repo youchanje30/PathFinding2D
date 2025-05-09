@@ -1,6 +1,13 @@
 extends Node
 class_name BoardData
 
+# 상태 상수 정의
+const TILE_EMPTY = 1
+const TILE_WALL = -1
+const TILE_PATH = 2
+const TILE_START_END = 3
+const TILE_ROUTE = 4
+
 ## 판의 최대 가로 크기
 @export var max_x : int = 100
 ## 판의 최대 세로 크기
@@ -32,7 +39,7 @@ func init_board(_max_x : int, _max_y : int):
 func reset_board():
 	for i in range(max_y):
 		for j in range(max_x):
-			board[i][j] = [false, 1] # 기본 땅은 1
+			board[i][j] = [false, TILE_EMPTY, 1] # 방문X, 빈 땅, 가중치 1
 
 ## 유효한 위치 인지 확인합니다.
 ## 유효할 경우 true, 유효하지 않을 경우 false를 반환합니다.
@@ -44,31 +51,32 @@ func is_valid_position(x : int, y : int) -> bool:
 func is_visited(x : int, y : int) -> bool:
 	return board[y][x][0]
 
-## 셀의 값을 변경하고, 변경 신호를 발생시킵니다.
-func set_cell(x: int, y: int, value, type : int = 0):
+## 셀의 상태와 가중치를 변경하고, 변경 신호를 발생시킵니다.
+func set_cell(x: int, y: int, state: int, cost: int = 1):
 	if not is_valid_position(x, y): return
-	# 벽은 -1, 나머지는 최소 1
-	board[y][x][1] = value
-	emit_signal("cell_changed", x, y, type * 4 + value)
+	board[y][x][1] = state
+	board[y][x][2] = cost
+	emit_signal("cell_changed", x, y, state)
 
-
+## 셀의 가중치만 변경
+func set_cost(x: int, y: int, cost: int):
+	if not is_valid_position(x, y): return
+	board[y][x][2] = cost
 
 #region Path Finding Methods
 func can_visit(x : int, y : int) -> bool:
-	return is_valid_position(x, y) and not is_visited(x, y) and board[y][x][1] != -1
+	return is_valid_position(x, y) and not is_visited(x, y) and board[y][x][1] != TILE_WALL
 
 func visit(x : int, y : int):
 	board[y][x][0] = true
-	emit_signal("cell_changed", x, y, 1)
+	emit_signal("cell_changed", x, y, TILE_PATH)
 
 func disable_visit(x : int, y : int):
 	board[y][x][0] = false
-	print(x, y)
-	emit_signal("cell_changed", x, y, 0)
+	emit_signal("cell_changed", x, y, TILE_EMPTY)
 
 func get_cost(x : int, y : int) -> int:
-	var v = board[y][x][1]
-	return v if v > 0 else 1
+	return board[y][x][2]
 
 func path_find(start : Vector2, end : Vector2):
 	board[start.y][start.x][0] = true
@@ -76,10 +84,10 @@ func path_find(start : Vector2, end : Vector2):
 
 func draw_path(path : Array[Vector2i]):
 	for cell in path:
-		emit_signal("cell_changed", cell[0], cell[1], 2)
+		emit_signal("cell_changed", cell[0], cell[1], TILE_ROUTE)
 
 func try_path_find(start : Vector2, end : Vector2):
 	emit_signal("path_finding_started")
-	await get_tree().create_timer(0.25).timeout
+	await get_tree().create_timer(2).timeout
 	path_find(start, end)
 #endregion
