@@ -12,7 +12,7 @@ class_name BoardData
 var board : Array[Array] = []
 
 signal cell_changed(x, y, value)
-
+signal path_finding_started()
 
 func _ready():
 	init_board(max_x, max_y)
@@ -61,6 +61,11 @@ func visit(x : int, y : int):
 	board[y][x][0] = true
 	emit_signal("cell_changed", x, y, 1)
 
+func disable_visit(x : int, y : int):
+	board[y][x][0] = false
+	print(x, y)
+	emit_signal("cell_changed", x, y, 0)
+
 func get_cost(x : int, y : int) -> int:
 	var v = board[y][x][1]
 	return v if v > 0 else 1
@@ -72,4 +77,9 @@ func path_find(start : Vector2, end : Vector2):
 func draw_path(path : Array[Vector2i]):
 	for cell in path:
 		emit_signal("cell_changed", cell[0], cell[1], 2)
+
+func try_path_find(start : Vector2, end : Vector2):
+	emit_signal("path_finding_started")
+	await get_tree().create_timer(0.25).timeout
+	path_find(start, end)
 #endregion

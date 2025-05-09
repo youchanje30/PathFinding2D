@@ -63,7 +63,8 @@ func _apply_wall(mouse_pos, is_create):
 
 func _find_path():
 	print("최단 경로 탐색 실행: ", start_pos, "→", end_pos)
-	board_data.path_find(start_pos, end_pos)
+	# board_data.path_find(start_pos, end_pos)
+	board_data.try_path_find(start_pos, end_pos)
 
 func get_position(mouse_pos):
 	var global_pos = get_viewport().get_canvas_transform().affine_inverse() * mouse_pos
