@@ -46,9 +46,10 @@ script = ExtResource("1_khmu4")
 board_data = NodePath("../BoardData")
 tileMapLayer = NodePath("../TileController")
 
-[node name="BoardData" type="Node" parent="." node_paths=PackedStringArray("path_finding_strategy")]
+[node name="BoardData" type="Node" parent="." node_paths=PackedStringArray("path_finding_strategy", "tile_controller")]
 script = ExtResource("2_g1fwc")
-path_finding_strategy = NodePath("../PathFindings/AStar")
+path_finding_strategy = NodePath("../PathFindings/BFS")
+tile_controller = NodePath("../TileController")
 
 [node name="TileController" type="TileMapLayer" parent="." node_paths=PackedStringArray("tileMapLayer", "board_data")]
 tile_set = SubResource("TileSet_7o5jn")

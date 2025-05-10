@@ -1,4 +1,5 @@
 extends Node
+class_name TileController
 
 @export var tileMapLayer : TileMapLayer
 @export var board_data : BoardData
@@ -7,7 +8,6 @@ extends Node
 @export var max_y : int = 100
 
 var visited_tiles : Array[Vector2i] = []
-
 
 func _ready():
 	if board_data:
@@ -51,3 +51,6 @@ func _on_path_finding_started():
 		board_data.disable_visit(tile.x, tile.y)
 		print("방문 비활성화: ", tile)
 	visited_tiles.clear()
+
+func has_route() -> bool:
+	return visited_tiles.size() > 0

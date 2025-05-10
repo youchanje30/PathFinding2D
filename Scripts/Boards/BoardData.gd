@@ -15,6 +15,7 @@ const TILE_ROUTE = 4
 
 ## 경로 탐색 전략
 @export var path_finding_strategy : IPathFindingStrategy
+@export var tile_controller : TileController
 
 var board : Array[Array] = []
 
@@ -86,8 +87,12 @@ func draw_path(path : Array[Vector2i]):
 	for cell in path:
 		emit_signal("cell_changed", cell[0], cell[1], TILE_ROUTE)
 
-func try_path_find(start : Vector2, end : Vector2):
+func clear_visited_and_route():
 	emit_signal("path_finding_started")
-	await get_tree().create_timer(2).timeout
+
+func try_path_find(start : Vector2, end : Vector2):
 	path_find(start, end)
+
+func has_route() -> bool:
+	return tile_controller.has_route()
 #endregion
