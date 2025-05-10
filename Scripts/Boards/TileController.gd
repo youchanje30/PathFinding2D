@@ -47,9 +47,7 @@ func _on_cell_changed(x, y, value):
 	
 func _on_path_finding_started():
 	for tile in visited_tiles:
-		await get_tree().create_timer(0.001).timeout
 		board_data.disable_visit(tile.x, tile.y)
-		print("방문 비활성화: ", tile)
 	visited_tiles.clear()
 
 func has_route() -> bool:

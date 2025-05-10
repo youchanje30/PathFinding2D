@@ -59,6 +59,11 @@ func set_cell(x: int, y: int, state: int, cost: int = 1):
 	board[y][x][2] = cost
 	emit_signal("cell_changed", x, y, state)
 
+func remove_cell(x: int, y: int):
+	if not is_valid_position(x, y): return
+	board[y][x][0] = false
+	set_cell(x, y, TILE_EMPTY)
+
 ## 셀의 가중치만 변경
 func set_cost(x: int, y: int, cost: int):
 	if not is_valid_position(x, y): return
@@ -74,7 +79,7 @@ func visit(x : int, y : int):
 
 func disable_visit(x : int, y : int):
 	board[y][x][0] = false
-	emit_signal("cell_changed", x, y, TILE_EMPTY)
+	emit_signal("cell_changed", x, y, TILE_EMPTY if board[y][x][1] != TILE_START_END else TILE_START_END)
 
 func get_cost(x : int, y : int) -> int:
 	return board[y][x][2]
@@ -82,6 +87,9 @@ func get_cost(x : int, y : int) -> int:
 func path_find(start : Vector2, end : Vector2):
 	board[start.y][start.x][0] = true
 	path_finding_strategy.path_find(self, start, end)
+
+func change_path_find_strategy(strategy : IPathFindingStrategy):
+	path_finding_strategy = strategy
 
 func draw_path(path : Array[Vector2i]):
 	for cell in path:
