@@ -15,7 +15,6 @@ const TILE_ROUTE = 4
 
 ## 경로 탐색 전략
 @export var path_finding_strategy : IPathFindingStrategy
-@export var tile_controller : TileController
 
 var board : Array[Array] = []
 
@@ -24,7 +23,35 @@ signal path_finding_started()
 
 func _ready():
 	init_board(max_x, max_y)
+	EventBus.connect("set_cell", Callable(self, "_on_set_cell"))
+	EventBus.connect("remove_cell", Callable(self, "_on_remove_cell"))
+	EventBus.connect("try_path_find", Callable(self, "_on_try_path_find"))
+	EventBus.connect("clear_visited_and_route", Callable(self, "_on_clear_visited_and_route"))
+	EventBus.connect("path_finding_strategy_changed", Callable(self, "_on_path_finding_strategy_changed"))
+	EventBus.connect("request_cell_cost", Callable(self, "_on_request_cell_cost"))
+	EventBus.connect("disable_visit", Callable(self, "_on_disable_visit"))
 
+func _on_set_cell(x, y, value, cost):
+	set_cell(x, y, value, cost)
+
+func _on_remove_cell(x, y):
+	remove_cell(x, y)
+
+func _on_try_path_find(start, end):
+	try_path_find(start, end)
+
+func _on_clear_visited_and_route():
+	clear_visited_and_route()
+
+func _on_path_finding_strategy_changed(strategy):
+	change_path_find_strategy(strategy)
+
+func _on_request_cell_cost(x, y):
+	if is_valid_position(x, y):
+		EventBus.emit_signal("response_cell_cost", x, y, get_cost(x, y))
+
+func _on_disable_visit(x, y):
+	disable_visit(x, y)
 
 ## 판을 생성 합니다.
 func init_board(_max_x : int, _max_y : int):
@@ -57,17 +84,19 @@ func set_cell(x: int, y: int, state: int, cost: int = 1):
 	if not is_valid_position(x, y): return
 	board[y][x][1] = state
 	board[y][x][2] = cost
-	emit_signal("cell_changed", x, y, state)
+	EventBus.emit_signal("cell_changed", x, y, state)
 
 func remove_cell(x: int, y: int):
 	if not is_valid_position(x, y): return
 	board[y][x][0] = false
 	set_cell(x, y, TILE_EMPTY)
+	EventBus.emit_signal("cell_removed", x, y)
 
 ## 셀의 가중치만 변경
 func set_cost(x: int, y: int, cost: int):
 	if not is_valid_position(x, y): return
 	board[y][x][2] = cost
+	EventBus.emit_signal("cell_cost_changed", x, y, cost)
 
 #region Path Finding Methods
 func can_visit(x : int, y : int) -> bool:
@@ -75,11 +104,11 @@ func can_visit(x : int, y : int) -> bool:
 
 func visit(x : int, y : int):
 	board[y][x][0] = true
-	emit_signal("cell_changed", x, y, TILE_PATH)
+	EventBus.emit_signal("cell_changed", x, y, TILE_PATH)
 
 func disable_visit(x : int, y : int):
 	board[y][x][0] = false
-	emit_signal("cell_changed", x, y, TILE_EMPTY if board[y][x][1] != TILE_START_END else TILE_START_END)
+	EventBus.emit_signal("cell_changed", x, y, TILE_EMPTY if board[y][x][1] != TILE_START_END else TILE_START_END)
 
 func get_cost(x : int, y : int) -> int:
 	return board[y][x][2]
@@ -93,14 +122,13 @@ func change_path_find_strategy(strategy : IPathFindingStrategy):
 
 func draw_path(path : Array[Vector2i]):
 	for cell in path:
-		emit_signal("cell_changed", cell[0], cell[1], TILE_ROUTE)
+		EventBus.emit_signal("cell_changed", cell[0], cell[1], TILE_ROUTE)
+	EventBus.emit_signal("path_drawn", path)
 
 func clear_visited_and_route():
-	emit_signal("path_finding_started")
+	EventBus.emit_signal("path_finding_started")
 
 func try_path_find(start : Vector2, end : Vector2):
 	path_find(start, end)
 
-func has_route() -> bool:
-	return tile_controller.has_route()
 #endregion

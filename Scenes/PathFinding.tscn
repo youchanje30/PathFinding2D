@@ -40,25 +40,21 @@ texture = ExtResource("4_m1b2c")
 sources/0 = SubResource("TileSetAtlasSource_43afh")
 sources/1 = SubResource("TileSetAtlasSource_m1b2c")
 
-[node name="PathFinding2D" type="Node" node_paths=PackedStringArray("path_finding_strategys", "board_data")]
+[node name="PathFinding2D" type="Node" node_paths=PackedStringArray("path_finding_strategys")]
 script = ExtResource("1_ti74c")
 path_finding_strategys = [NodePath("PathFindings/DFS"), NodePath("PathFindings/BFS"), NodePath("PathFindings/Dijkstra"), NodePath("PathFindings/AStar")]
-board_data = NodePath("BoardData")
 
-[node name="InputController" type="Node" parent="." node_paths=PackedStringArray("board_data", "tileMapLayer")]
+[node name="InputController" type="Node" parent="." node_paths=PackedStringArray("tileMapLayer")]
 script = ExtResource("1_khmu4")
-board_data = NodePath("../BoardData")
 tileMapLayer = NodePath("../TileController")
 
-[node name="BoardData" type="Node" parent="." node_paths=PackedStringArray("tile_controller")]
+[node name="BoardData" type="Node" parent="."]
 script = ExtResource("2_g1fwc")
-tile_controller = NodePath("../TileController")
 
-[node name="TileController" type="TileMapLayer" parent="." node_paths=PackedStringArray("tileMapLayer", "board_data")]
+[node name="TileController" type="TileMapLayer" parent="." node_paths=PackedStringArray("tileMapLayer")]
 tile_set = SubResource("TileSet_7o5jn")
 script = ExtResource("4_ti74c")
 tileMapLayer = NodePath(".")
-board_data = NodePath("../BoardData")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(802, 778)

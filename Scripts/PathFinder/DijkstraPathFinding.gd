@@ -17,6 +17,7 @@ func init(max_x, max_y) -> void:
 
 
 func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
+	EventBus.emit_signal("path_finding_started")
 	init(board_data.max_x, board_data.max_y)
 	var pq := PQ.new()
 	pq.set_comparator(comparator.less_by_first)
@@ -53,3 +54,4 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 			board_data.visit(next_pos.x, next_pos.y)
 
 	board_data.draw_path(path(start, end))
+	EventBus.emit_signal("path_finding_finished", found, path(start, end))

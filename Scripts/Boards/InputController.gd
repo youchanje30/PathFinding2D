@@ -1,6 +1,12 @@
 extends Node
 
-@export var board_data : BoardData
+# BoardData와 동일한 상수 정의
+const TILE_EMPTY = 1
+const TILE_WALL = -1
+const TILE_PATH = 2
+const TILE_START_END = 3
+const TILE_ROUTE = 4
+
 @export var tileMapLayer : TileMapLayer
 
 var is_left_dragging := false
@@ -9,9 +15,13 @@ var vertex_pos : Array[Vector2i] = []
 var weight_value := 1
 var can_fix := true # 수정 가능 여부
 
+# 경로 존재 여부 질의/응답 비동기 처리용
+var waiting_for_route_check := false
+var pending_path_find := false
+
 func _ready():
-	if board_data:
-		board_data.connect("path_finding_started", Callable(self, "_on_path_finding_started"))
+	EventBus.connect("path_finding_started", Callable(self, "_on_path_finding_started"))
+	EventBus.connect("response_has_route", Callable(self, "_on_response_has_route"))
 
 func _unhandled_input(event):
 	# space(경로 탐색)만 항상 허용, 그 외 입력은 can_fix이 true일 때만 허용
@@ -64,31 +74,38 @@ func _apply_start_end(mouse_pos):
 	var pos = get_position(mouse_pos)
 	if pos in vertex_pos: return
 	vertex_pos.append(pos)
-	board_data.set_cell(pos.x, pos.y, board_data.TILE_START_END)
+	EventBus.emit_signal("set_cell", pos.x, pos.y, TILE_START_END, 0)
 
 func _apply_weight(mouse_pos):
 	var pos = get_position(mouse_pos)
 	if pos in vertex_pos: _apply_delete(mouse_pos)
-	board_data.set_cell(pos.x, pos.y, board_data.TILE_EMPTY, weight_value) # 선택된 가중치로 땅 설치
+	EventBus.emit_signal("set_cell", pos.x, pos.y, TILE_EMPTY, weight_value) # 선택된 가중치로 땅 설치
 
 func _apply_wall(mouse_pos, is_create):
 	var pos = get_position(mouse_pos)
 	if is_create and pos in vertex_pos: _apply_delete(mouse_pos)
-	board_data.set_cell(pos.x, pos.y, board_data.TILE_WALL if is_create else board_data.TILE_EMPTY)
+	EventBus.emit_signal("set_cell", pos.x, pos.y, TILE_WALL if is_create else TILE_EMPTY, 0)
 
 func _apply_delete(mouse_pos):
 	var pos = get_position(mouse_pos)
-	board_data.set_cell(pos.x, pos.y, board_data.TILE_EMPTY)
+	EventBus.emit_signal("set_cell", pos.x, pos.y, TILE_EMPTY, 0)
 	while pos in vertex_pos: vertex_pos.erase(pos)
 
 func _find_path():
-	if board_data.has_route():
-		board_data.clear_visited_and_route()
+	waiting_for_route_check = true
+	EventBus.emit_signal("request_has_route")
+
+func _on_response_has_route(has_route):
+	if not waiting_for_route_check:
+		return
+	waiting_for_route_check = false
+	if has_route:
+		EventBus.emit_signal("clear_visited_and_route")
 		print("경로 및 방문 흔적만 초기화됨")
 	elif vertex_pos.size() >= 2:
 		print("최단 경로 탐색 실행: ", vertex_pos[0], "→", vertex_pos[1])
 		can_fix = false
-		board_data.try_path_find(vertex_pos[0], vertex_pos[1])
+		EventBus.emit_signal("try_path_find", vertex_pos[0], vertex_pos[1])
 	else:
 		print("경로 탐색 실행 조건 불충족")
 

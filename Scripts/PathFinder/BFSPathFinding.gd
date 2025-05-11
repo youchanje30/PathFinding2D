@@ -9,6 +9,7 @@ var move_list : Array[Vector2i] = [
 ]
 
 func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
+	EventBus.emit_signal("path_finding_started")
 	init(board_data.max_x, board_data.max_y)
 	var queue : Array = [start]
 	parents[start.y][start.x] = start
@@ -31,3 +32,4 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 			board_data.visit(next.x, next.y)
 
 	board_data.draw_path(path(start, end))
+	EventBus.emit_signal("path_finding_finished", found, path(start, end))
