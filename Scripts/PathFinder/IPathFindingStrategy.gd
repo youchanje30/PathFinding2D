@@ -3,7 +3,7 @@ extends Node
 class_name IPathFindingStrategy
 
 var parents = []
-
+var is_stop := false
 
 #region Utility
 func set_array(arr : Array, r : int, size : int, val):
@@ -29,3 +29,6 @@ func path(start : Vector2i, end : Vector2i) -> Array[Vector2i]:
 		paths.append(parent)
 		parent = parents[parent.y][parent.x]
 	return paths
+
+func stop_path_find():
+	is_stop = true

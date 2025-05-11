@@ -15,9 +15,7 @@ func _ready():
 		board_data.connect("path_finding_started", Callable(self, "_on_path_finding_started"))
 	for y in range(max_y):
 		for x in range(max_x):
-			tileMapLayer.set_cell(Vector2i(x, y), 1, Vector2i(1, 0))
-
-
+			tileMapLayer.set_cell(Vector2i(x, y), 1, Vector2i(0, 1))
 
 
 func _on_cell_changed(x, y, value):
@@ -29,11 +27,7 @@ func _on_cell_changed(x, y, value):
 		board_data.TILE_EMPTY:
 			# 가중치가 1~9인 땅에 대해 색상 지정
 			var cost = board_data.board[y][x][2]
-			if cost >= 1 and cost <= 9:
-				tile_vector = Vector2i(cost - 1, 1)
-			else:
-				tile_vector = Vector2i(0, 1) # 기본 빈 칸
-				# tile_vector = Vector2i(1, 0) # 기본 빈 칸
+			tile_vector = Vector2i(max(0, cost - 1), 1)
 		board_data.TILE_PATH:
 			tile_vector = Vector2i(2, 0) # 방문
 			visited_tiles.push_back(Vector2i(x, y))

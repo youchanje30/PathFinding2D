@@ -17,15 +17,17 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 	while not queue.is_empty() and not found:
 		var current : Vector2i = queue.pop_front()
 		for move in move_list:
+			if is_stop: return
+
 			var next = current + move
 			if not board_data.can_visit(next.x, next.y): continue
+
 			await get_tree().create_timer(0.001).timeout
 
 			queue.append(next)
 			parents[next.y][next.x] = current
-			if next == end:
-				found = true
-				break
+
+			if next == end: found = true; break
 			board_data.visit(next.x, next.y)
 
 	board_data.draw_path(path(start, end))
