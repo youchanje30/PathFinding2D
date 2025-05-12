@@ -33,5 +33,4 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 			if next == end: found = true; break
 			board_data.visit(next.x, next.y)
 
-	board_data.draw_path(path(start, end))
 	EventBus.emit_signal("path_finding_finished", found, path(start, end))

@@ -26,6 +26,7 @@ signal path_finding_finished(success, path) # 경로 탐색이 끝남 (성공여
 signal path_drawn(path) # 경로가 그려짐 (경로배열)
 signal try_path_find(start, end) # 경로 탐색 요청
 signal clear_visited_and_route() # 방문 흔적/경로 초기화 요청
+signal path_removed() # 경로 제거 요청
 
 # --- 입력/상호작용 관련 신호 ---
 signal input_mode_changed(mode) # 입력 모드가 변경됨 (1: 시작/도착점, 2: 벽, 3: 가중치)

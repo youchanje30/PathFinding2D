@@ -17,10 +17,9 @@ var pending_cost_cells := {}
 
 func _ready():
 	EventBus.connect("cell_changed", Callable(self, "_on_cell_changed"))
-	EventBus.connect("path_finding_started", Callable(self, "_on_path_finding_started"))
 	EventBus.connect("request_has_route", Callable(self, "_on_request_has_route"))
-	EventBus.connect("disable_visit", Callable(self, "_on_disable_visit"))
 	EventBus.connect("response_cell_cost", Callable(self, "_on_response_cell_cost"))
+	EventBus.connect("clear_visited_and_route", Callable(self, "_on_clear_visited_and_route"))
 	for y in range(max_y):
 		for x in range(max_x):
 			tileMapLayer.set_cell(Vector2i(x, y), 1, Vector2i(0, 1))
@@ -46,20 +45,15 @@ func _on_cell_changed(x, y, value):
 				tile_vector = Vector2i(1, 1)
 		tileMapLayer.set_cell(Vector2i(x, y), 1, tile_vector)
 
-func _on_path_finding_started():
+
+func _on_clear_visited_and_route():
 	for tile in visited_tiles:
 		EventBus.emit_signal("disable_visit", tile.x, tile.y)
 	visited_tiles.clear()
+	EventBus.emit_signal("path_removed")
 
 func _on_request_has_route():
 	EventBus.emit_signal("response_has_route", visited_tiles.size() > 0)
-
-func _on_disable_visit(x, y):
-	# disable_visit 신호를 받으면 해당 좌표의 방문을 해제
-	# BoardData의 disable_visit과 동일한 동작을 하려면, BoardData에서 신호를 받아서 처리해야 함
-	# 여기서는 단순히 타일 색상만 빈 칸으로 변경(방문 해제)
-	var tile_vector := Vector2i(0, 1)
-	tileMapLayer.set_cell(Vector2i(x, y), 1, tile_vector)
 
 func _on_response_cell_cost(x, y, cost):
 	var key = Vector2i(x, y)

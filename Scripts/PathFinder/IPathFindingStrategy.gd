@@ -14,6 +14,7 @@ func set_array(arr : Array, r : int, size : int, val):
 		arr[i].fill(val)
 #endregion
 
+
 func init(max_x : int, max_y : int):
 	set_array(parents, max_y, max_x, Vector2i(-1, -1))
 
@@ -32,3 +33,6 @@ func path(start : Vector2i, end : Vector2i) -> Array[Vector2i]:
 
 func stop_path_find():
 	is_stop = true
+
+func enable_path_find():
+	is_stop = false

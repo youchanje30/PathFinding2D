@@ -16,12 +16,11 @@ var weight_value := 1
 var can_fix := true # 수정 가능 여부
 
 # 경로 존재 여부 질의/응답 비동기 처리용
-var waiting_for_route_check := false
 var pending_path_find := false
 
 func _ready():
 	EventBus.connect("path_finding_started", Callable(self, "_on_path_finding_started"))
-	EventBus.connect("response_has_route", Callable(self, "_on_response_has_route"))
+	EventBus.connect("path_removed", Callable(self, "_on_path_removed"))
 
 func _unhandled_input(event):
 	# space(경로 탐색)만 항상 허용, 그 외 입력은 can_fix이 true일 때만 허용
@@ -92,22 +91,16 @@ func _apply_delete(mouse_pos):
 	while pos in vertex_pos: vertex_pos.erase(pos)
 
 func _find_path():
-	waiting_for_route_check = true
-	EventBus.emit_signal("request_has_route")
-
-func _on_response_has_route(has_route):
-	if not waiting_for_route_check:
-		return
-	waiting_for_route_check = false
-	if has_route:
+	if can_fix:
+		if vertex_pos.size() >= 2:
+			print("최단 경로 탐색 실행: ", vertex_pos[0], "→", vertex_pos[1])
+			can_fix = false
+			EventBus.emit_signal("try_path_find", vertex_pos[0], vertex_pos[1])
+		else:
+			print("경로 탐색 실행 조건 불충족")
+	else:
 		EventBus.emit_signal("clear_visited_and_route")
 		print("경로 및 방문 흔적만 초기화됨")
-	elif vertex_pos.size() >= 2:
-		print("최단 경로 탐색 실행: ", vertex_pos[0], "→", vertex_pos[1])
-		can_fix = false
-		EventBus.emit_signal("try_path_find", vertex_pos[0], vertex_pos[1])
-	else:
-		print("경로 탐색 실행 조건 불충족")
 
 func get_position(mouse_pos):
 	var global_pos = get_viewport().get_canvas_transform().affine_inverse() * mouse_pos
@@ -116,4 +109,7 @@ func get_position(mouse_pos):
 	return Vector2i(int(cell.x), int(cell.y))
 
 func _on_path_finding_started():
+	can_fix = false
+
+func _on_path_removed():
 	can_fix = true

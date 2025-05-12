@@ -30,6 +30,8 @@ func _ready():
 	EventBus.connect("path_finding_strategy_changed", Callable(self, "_on_path_finding_strategy_changed"))
 	EventBus.connect("request_cell_cost", Callable(self, "_on_request_cell_cost"))
 	EventBus.connect("disable_visit", Callable(self, "_on_disable_visit"))
+	EventBus.connect("path_finding_finished", Callable(self, "_on_path_finding_finished"))
+	
 
 func _on_set_cell(x, y, value, cost):
 	set_cell(x, y, value, cost)
@@ -39,9 +41,6 @@ func _on_remove_cell(x, y):
 
 func _on_try_path_find(start, end):
 	try_path_find(start, end)
-
-func _on_clear_visited_and_route():
-	clear_visited_and_route()
 
 func _on_path_finding_strategy_changed(strategy):
 	change_path_find_strategy(strategy)
@@ -73,6 +72,9 @@ func reset_board():
 ## 유효할 경우 true, 유효하지 않을 경우 false를 반환합니다.
 func is_valid_position(x : int, y : int) -> bool:
 	return x >= 0 and x < max_x and y >= 0 and y < max_y
+
+func _on_clear_visited_and_route():
+	path_finding_strategy.stop_path_find()
 
 ## 방문한 위치 인지 확인합니다.
 ## 방문한 경우 true, 방문하지 않은 경우 false를 반환합니다.
@@ -115,6 +117,7 @@ func get_cost(x : int, y : int) -> int:
 
 func path_find(start : Vector2, end : Vector2):
 	board[start.y][start.x][0] = true
+	path_finding_strategy.enable_path_find()
 	path_finding_strategy.path_find(self, start, end)
 
 func change_path_find_strategy(strategy : IPathFindingStrategy):
@@ -125,10 +128,10 @@ func draw_path(path : Array[Vector2i]):
 		EventBus.emit_signal("cell_changed", cell[0], cell[1], TILE_ROUTE)
 	EventBus.emit_signal("path_drawn", path)
 
-func clear_visited_and_route():
-	EventBus.emit_signal("path_finding_started")
 
 func try_path_find(start : Vector2, end : Vector2):
 	path_find(start, end)
 
+func _on_path_finding_finished(success : bool, path : Array[Vector2i]):
+	if success: draw_path(path)
 #endregion
