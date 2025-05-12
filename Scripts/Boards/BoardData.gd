@@ -1,12 +1,13 @@
 extends Node
 class_name BoardData
 
-# 상태 상수 정의
+# BoardData와 동일한 상수 정의
 const TILE_EMPTY = 1
 const TILE_WALL = -1
 const TILE_PATH = 2
 const TILE_START_END = 3
 const TILE_ROUTE = 4
+
 
 ## 판의 최대 가로 크기
 @export var max_x : int = 100
@@ -40,7 +41,7 @@ func _on_remove_cell(x, y):
 	remove_cell(x, y)
 
 func _on_try_path_find(start, end):
-	try_path_find(start, end)
+	path_find(start, end)
 
 func _on_path_finding_strategy_changed(strategy):
 	change_path_find_strategy(strategy)
@@ -127,10 +128,6 @@ func draw_path(path : Array[Vector2i]):
 	for cell in path:
 		EventBus.emit_signal("cell_changed", cell[0], cell[1], TILE_ROUTE)
 	EventBus.emit_signal("path_drawn", path)
-
-
-func try_path_find(start : Vector2, end : Vector2):
-	path_find(start, end)
 
 func _on_path_finding_finished(success : bool, path : Array[Vector2i]):
 	if success: draw_path(path)

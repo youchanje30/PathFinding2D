@@ -3,6 +3,8 @@ extends IPathFindingStrategy
 
 var dp = []
 
+# INF 상수 직접 선언
+const INF = 999999999
 
 var move_list : Array[Vector2i] = [
 	Vector2i(0, 1),
@@ -13,7 +15,7 @@ var move_list : Array[Vector2i] = [
 
 func init(max_x, max_y) -> void:
 	super.init(max_x, max_y)
-	set_array(dp, max_y, max_x, 999999999)
+	set_array(dp, max_y, max_x, INF)
 
 
 func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
