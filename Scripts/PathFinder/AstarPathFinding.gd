@@ -40,8 +40,6 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 		cost = dp[pos.y][pos.x]
 
 		for add in move_list:
-			if is_stop: return
-
 			var next_pos = pos + add
 			if not board_data.can_visit(next_pos.x, next_pos.y): continue
 
@@ -55,6 +53,7 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 			pq.push([dp[next_pos.y][next_pos.x] + heuristic(next_pos, end), next_pos])
 
 			if next_pos == end: found = true; break
+			if is_stop: return
 
 			board_data.visit(next_pos.x, next_pos.y)
 

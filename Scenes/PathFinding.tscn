@@ -1,15 +1,15 @@
 [gd_scene load_steps=14 format=3 uid="uid://dqmcrbu60fqrr"]
 
-[ext_resource type="Script" uid="uid://c53qsahfti4x4" path="res://Scripts/Boards/InputController.gd" id="1_khmu4"]
-[ext_resource type="Script" uid="uid://d4ipe4mi3cobw" path="res://Scripts/Boards/PathFindingManager.gd" id="1_ti74c"]
-[ext_resource type="Script" uid="uid://bdfhsqttajokj" path="res://Scripts/Boards/BoardData.gd" id="2_g1fwc"]
+[ext_resource type="Script" uid="uid://b0813d3ffyknt" path="res://Scripts/Boards/InputController.gd" id="1_khmu4"]
+[ext_resource type="Script" uid="uid://i7f4p3typ2e" path="res://Scripts/Boards/PathFindingManager.gd" id="1_ti74c"]
+[ext_resource type="Script" uid="uid://dq5xqybo4pyux" path="res://Scripts/Boards/BoardData.gd" id="2_g1fwc"]
 [ext_resource type="Texture2D" uid="uid://b1ne2y5ded8rc" path="res://Resources/Tilemap_Atlas.png" id="3_m1b2c"]
 [ext_resource type="Texture2D" uid="uid://bicr6jjglxw5i" path="res://Resources/Costable_Tilemap_Atlas.png" id="4_m1b2c"]
-[ext_resource type="Script" uid="uid://c1vhp18ryugpv" path="res://Scripts/Boards/TileController.gd" id="4_ti74c"]
-[ext_resource type="Script" uid="uid://n7hd0mn5ef38" path="res://Scripts/PathFinder/BFSPathFinding.gd" id="5_oc7cq"]
-[ext_resource type="Script" uid="uid://ddi4hrwx1mt4e" path="res://Scripts/PathFinder/DFSPathFinding.gd" id="6_vtqva"]
-[ext_resource type="Script" uid="uid://dpsgwrhquro8r" path="res://Scripts/PathFinder/AstarPathFinding.gd" id="7_dfhxm"]
-[ext_resource type="Script" uid="uid://b5s4ll81qgxm2" path="res://Scripts/PathFinder/DijkstraPathFinding.gd" id="8_g1fwc"]
+[ext_resource type="Script" uid="uid://dq8hqfdn6logd" path="res://Scripts/Boards/TileController.gd" id="4_ti74c"]
+[ext_resource type="Script" uid="uid://dsg2sdsdw14f8" path="res://Scripts/PathFinder/BFSPathFinding.gd" id="5_oc7cq"]
+[ext_resource type="Script" uid="uid://c706ifnomxmdm" path="res://Scripts/PathFinder/DFSPathFinding.gd" id="6_vtqva"]
+[ext_resource type="Script" uid="uid://vsdbe74mul4i" path="res://Scripts/PathFinder/AstarPathFinding.gd" id="7_dfhxm"]
+[ext_resource type="Script" uid="uid://cqv6q6da6wkyo" path="res://Scripts/PathFinder/DijkstraPathFinding.gd" id="8_g1fwc"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_43afh"]
 texture = ExtResource("3_m1b2c")
