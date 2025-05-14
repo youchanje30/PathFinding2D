@@ -20,10 +20,12 @@ func init(max_x : int, max_y : int):
 
 func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 	init(board_data.max_x, board_data.max_y)
-	board_data.draw_path(path(start, end))
+	board_data.draw_path(path(start, end, false))
 
 
-func path(start : Vector2i, end : Vector2i) -> Array[Vector2i]:
+func path(start : Vector2i, end : Vector2i, is_found : bool = false) -> Array[Vector2i]:
+	if not is_found: return []
+
 	var paths : Array[Vector2i] = []
 	var parent : Vector2i = parents[end.y][end.x]
 	while parent != start:

@@ -57,4 +57,4 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 
 			board_data.visit(next_pos.x, next_pos.y)
 
-	EventBus.emit_signal("path_finding_finished", found, path(start, end))
+	EventBus.emit_signal("path_finding_finished", found, path(start, end, found))
