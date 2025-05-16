@@ -24,7 +24,7 @@ func init(max_x, max_y) -> void:
 func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 	EventBus.emit_signal("path_finding_started")
 	init(board_data.max_x, board_data.max_y)
-	var pq := PQ.new()
+	var pq = PriorityQueue.new()
 	pq.set_comparator(comparator.less_by_first)
 	pq.push([heuristic(start, end), start])
 	dp[start.y][start.x] = 0
