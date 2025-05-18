@@ -28,6 +28,9 @@ func path(start : Vector2i, end : Vector2i, is_found : bool = false) -> Array[Ve
 
 	var paths : Array[Vector2i] = []
 	var parent : Vector2i = parents[end.y][end.x]
+	if parent == parents[parent.y][parent.x]:
+		print("parent == parents[parent.y][parent.x]")
+		return []
 	while parent != start:
 		paths.append(parent)
 		parent = parents[parent.y][parent.x]

@@ -95,6 +95,9 @@ func remove_cell(x: int, y: int):
 	set_cell(x, y, TILE_EMPTY)
 	EventBus.emit_signal("cell_removed", x, y)
 
+func is_wall(x:int, y:int)->bool:
+	return board[y][x][1] == TILE_WALL
+
 ## 셀의 가중치만 변경
 func set_cost(x: int, y: int, cost: int):
 	if not is_valid_position(x, y): return
