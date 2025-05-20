@@ -21,7 +21,7 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 			var next = current + move
 			if not board_data.can_visit(next.x, next.y): continue
 
-			await get_tree().create_timer(0.001).timeout
+			#await get_tree().create_timer(0.001).timeout
 
 			queue.append(next)
 			parents[next.y][next.x] = current

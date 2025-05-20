@@ -23,7 +23,7 @@ func jump(board : BoardData, pos : Vector2i, dir : Vector2i)->Vector2i:
 		if pos == end: return pos
 		if is_stop: return -Vector2i.ONE
 
-		await get_tree().create_timer(0.0001).timeout 
+		# await get_tree().create_timer(0.0001).timeout 
 
 		var next = pos + dir
 		if not board.can_visit(next.x, next.y): return -Vector2i.ONE
@@ -73,15 +73,48 @@ func path_find(board_data : BoardData, _start : Vector2i, _end : Vector2i):
 		for add in move_list:
 			var jump_point = await jump(board_data, pos, add)
 			if is_stop: return
-			
+
 			if jump_point == end: found = true; break
 
 			if jump_point == -Vector2i.ONE: continue
-			if dp[jump_point.y][jump_point.x] < heuristic(pos, jump_point) + heuristic(jump_point, end): continue
 
-			pq.push([heuristic(pos, jump_point) + heuristic(jump_point, end), jump_point])
-			dp[jump_point.y][jump_point.x] = heuristic(pos, jump_point) + heuristic(jump_point, end)
+			# 누적 거리(g) 계산
+			var g = dp[pos.y][pos.x] + (jump_point - pos).length()
+			if dp[jump_point.y][jump_point.x] <= g: continue
+
+			dp[jump_point.y][jump_point.x] = g
+			pq.push([g + heuristic(jump_point, end), jump_point])
+
+		var check_dir = [
+			[Vector2i(1, 1), Vector2i(1, 0), Vector2i(0, 1)],
+			[Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(0, 1)],
+			[Vector2i(1, -1), Vector2i(1, 0), Vector2i(0, -1)],
+			[Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(0, -1)]
+		]
+		
+		for check_list in check_dir:
+			var target = check_list[0]
+			var check1 = check_list[1]
+			var check2 = check_list[2]
+
+			var target_pos = pos + target
+			if not board_data.can_visit(target_pos.x, target_pos.y): continue
+
+			var check1_pos = pos + check1
+			var check2_pos = pos + check2
+			var is_change = false
+
+			if not board_data.is_wall(check1_pos.x, check1_pos.y):
+				parents[target_pos.y][target_pos.x] = check1_pos; is_change = true
+			if not board_data.is_wall(check2_pos.x, check2_pos.y):
+				parents[target_pos.y][target_pos.x] = check2_pos; is_change = true
+			
+			if is_change:
+				if target_pos == end: found = true; break
+				board_data.visit(target_pos.x, target_pos.y)
+				pq.push([dp[pos.y][pos.x] + 2 + heuristic(target_pos, end), target_pos])
+				dp[target_pos.y][target_pos.x] = dp[pos.y][pos.x] + 2
+
 		if found: break
 
-	print(found)
 	EventBus.emit_signal("path_finding_finished", found, path(start, end, found))
