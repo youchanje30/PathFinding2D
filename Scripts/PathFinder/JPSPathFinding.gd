@@ -18,30 +18,33 @@ var move_list : Array[Vector2i] = [
 func heuristic(start : Vector2i, end : Vector2i) -> int:
 	return abs(start.x - end.x) + abs(start.y - end.y)
 
-func jump(board : BoardData, pos : Vector2i, dir : Vector2i, before : Vector2i):
-	if not board.is_valid_position(pos.x, pos.y): return
+func jump(board : BoardData, pos : Vector2i, dir : Vector2i)->Vector2i:
+	while true:
+		if pos == end: return pos
+		if is_stop: return -Vector2i.ONE
+
+		await get_tree().create_timer(0.0001).timeout 
+
+		var next = pos + dir
+		if not board.can_visit(next.x, next.y): return -Vector2i.ONE
+		board.visit(next.x, next.y)
+		parents[next.y][next.x] = pos
+
+		for check_dir in move_list:
+			if check_dir == dir or check_dir == -dir: continue
+			var check = pos + check_dir
+
+			if not board.is_valid_position(check.x, check.y): continue
+			if not board.is_wall(check.x, check.y): continue
+
+			var corner = check + dir
+			if not board.can_visit(corner.x, corner.y): continue
+
+			return next
 	
-	parents[pos.y][pos.x] = before
-	if pos == end: found = true; return
-	if is_stop: return
-	board.visit(pos.x, pos.y)
+		pos = next
+	return -Vector2i.ONE
 	
-	await get_tree().create_timer(0.001).timeout 
-	for check_dir in move_list:
-		if check_dir == dir or check_dir == -dir: continue
-		var check = pos + check_dir
-		# if check == end: parents[end.y][end.x] = pos; found = true; return
-		if not board.is_valid_position(check.x, check.y): continue
-		if not board.is_wall(check.x, check.y): continue
-		var corner = check + dir
-		if not board.can_visit(corner.x, corner.y): continue
-		dp[corner.y][corner.x] = heuristic(start, corner)
-		pq.push([dp[corner.y][corner.x] + heuristic(corner, end), corner])
-		board.visit(corner.x, corner.y)
-	
-	var next = pos + dir
-	if not board.can_visit(next.x, next.y): return
-	jump(board, pos + dir, dir, pos)
 
 func init(max_x, max_y) -> void:
 	super.init(max_x, max_y)
@@ -57,6 +60,7 @@ func path_find(board_data : BoardData, _start : Vector2i, _end : Vector2i):
 	init(board_data.max_x, board_data.max_y)
 	pq.push([heuristic(start, end), start])
 	dp[start.y][start.x] = 0
+	board_data.visit(start.x, start.y)
 
 	while not pq.empty() and not found:
 		var current = pq.top(); pq.pop()
@@ -67,15 +71,17 @@ func path_find(board_data : BoardData, _start : Vector2i, _end : Vector2i):
 		cost = dp[pos.y][pos.x]
 
 		for add in move_list:
-			var next = pos + add
-			if not board_data.can_visit(next.x, next.y): continue
-			jump(board_data, next, add, pos)
-			await get_tree().create_timer(2).timeout
-			if found: break
+			var jump_point = await jump(board_data, pos, add)
 			if is_stop: return
-		
+			
+			if jump_point == end: found = true; break
+
+			if jump_point == -Vector2i.ONE: continue
+			if dp[jump_point.y][jump_point.x] < heuristic(pos, jump_point) + heuristic(jump_point, end): continue
+
+			pq.push([heuristic(pos, jump_point) + heuristic(jump_point, end), jump_point])
+			dp[jump_point.y][jump_point.x] = heuristic(pos, jump_point) + heuristic(jump_point, end)
 		if found: break
-		for cross in [Vector2i.ONE, -Vector2i.ONE, Vector2i(1, -1), Vector2i(-1, 1)]:
-			pass
+
 	print(found)
 	EventBus.emit_signal("path_finding_finished", found, path(start, end, found))

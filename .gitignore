@@ -16,3 +16,4 @@ mono_crash.*.json
 
 # Godot UID 파일 무시
 *.uid
+Scenes/PathFinding.tscn
