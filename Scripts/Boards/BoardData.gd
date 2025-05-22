@@ -75,6 +75,7 @@ func is_valid_position(x : int, y : int) -> bool:
 	return x >= 0 and x < max_x and y >= 0 and y < max_y
 
 func _on_clear_visited_and_route():
+	if not path_finding_strategy: return
 	path_finding_strategy.stop_path_find()
 
 ## 방문한 위치 인지 확인합니다.

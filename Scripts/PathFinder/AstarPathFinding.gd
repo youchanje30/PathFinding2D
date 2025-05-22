@@ -33,10 +33,13 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 
 	while not pq.empty() and not found:
 		var current = pq.top(); pq.pop()
+
 		var f = current[0]
 		var pos = current[1]
 		var g = f - heuristic(pos, end)
 		if g > dp[pos.y][pos.x]: continue
+
+		board_data.visit(pos.x, pos.y)
 
 		for add in move_list:
 			var next_pos = pos + add
@@ -44,7 +47,6 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 
 			var cell_weight = board_data.get_cost(next_pos.x, next_pos.y)
 			if g + cell_weight >= dp[next_pos.y][next_pos.x]: continue
-			
 			# await get_tree().create_timer(0.001).timeout
 
 			dp[next_pos.y][next_pos.x] = g + cell_weight
@@ -54,6 +56,6 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 			if next_pos == end: found = true; continue
 			if is_stop: return
 
-			board_data.visit(next_pos.x, next_pos.y)
+			# board_data.visit(next_pos.x, next_pos.y)
 
 	EventBus.emit_signal("path_finding_finished", found, path(start, end, found))

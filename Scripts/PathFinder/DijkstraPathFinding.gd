@@ -43,7 +43,7 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 			var cell_weight = board_data.get_cost(next_pos.x, next_pos.y)
 			if cost + cell_weight >= dp[next_pos.y][next_pos.x]: continue
 
-			await get_tree().create_timer(0.001).timeout
+			# await get_tree().create_timer(0.001).timeout
 
 			var next_cost = cost + cell_weight
 			dp[next_pos.y][next_pos.x] = next_cost
