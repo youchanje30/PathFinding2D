@@ -1,14 +1,76 @@
-[gd_scene load_steps=4 format=3 uid="uid://dt3wxrbjcf3x2"]
+[gd_scene load_steps=14 format=3 uid="uid://b6j8y8q7x4n6w"]
 
-[ext_resource type="Script" path="res://Scripts/Tests/PathFindingTest.gd" id="1_test"]
-[ext_resource type="Script" path="res://Scripts/Boards/PathFindingManager.gd" id="2_manager"]
-[ext_resource type="Script" path="res://Scripts/Boards/BoardData.gd" id="3_board"]
+[ext_resource type="Script" uid="uid://bxcwlmm6of0kx" path="res://Scripts/Boards/PathFindingManager.gd" id="1_1dmqw"]
+[ext_resource type="Script" uid="uid://d4k635qnuqp28" path="res://Scripts/Tests/PathFindingTest.gd" id="1_rjk3m"]
+[ext_resource type="Script" uid="uid://dbklpy4666st2" path="res://Scripts/PathFinder/BFSPathFinding.gd" id="2_f5ndb"]
+[ext_resource type="Script" uid="uid://cwtlhejq3r70f" path="res://Scripts/PathFinder/AstarPathFinding.gd" id="3_wcs8m"]
+[ext_resource type="Script" uid="uid://c11lnj0nsq7l2" path="res://Scripts/PathFinder/JPSPathFinding.gd" id="4_bpq5c"]
+[ext_resource type="Script" uid="uid://yjcxilyounv1" path="res://Scripts/PathFinder/DijkstraPathFinding.gd" id="5_r2h77"]
+[ext_resource type="Script" uid="uid://ds6tpqdw1plmr" path="res://Scripts/Boards/BoardData.gd" id="6_kqncg"]
+[ext_resource type="Texture2D" uid="uid://b1ne2y5ded8rc" path="res://Resources/Tilemap_Atlas.png" id="7_hsjo5"]
+[ext_resource type="Texture2D" uid="uid://bicr6jjglxw5i" path="res://Resources/Costable_Tilemap_Atlas.png" id="8_otbsi"]
+[ext_resource type="Script" uid="uid://d285k0osgx71l" path="res://Scripts/Boards/TileController.gd" id="9_b5f5j"]
 
-[node name="PathFindingTest" type="Node"]
-script = ExtResource("1_test")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g2hib"]
+texture = ExtResource("7_hsjo5")
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
 
-[node name="PathFindingManager" type="Node" parent="."]
-script = ExtResource("2_manager")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o3x7f"]
+texture = ExtResource("8_otbsi")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+8:1/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_y87cj"]
+sources/0 = SubResource("TileSetAtlasSource_g2hib")
+sources/1 = SubResource("TileSetAtlasSource_o3x7f")
+
+[node name="PathFindingTest" type="Node" node_paths=PackedStringArray("path_finding_strategys")]
+script = ExtResource("1_1dmqw")
+path_finding_strategys = [NodePath("PathFinder/BFS"), NodePath("PathFinder/A*"), NodePath("PathFinder/JPS"), NodePath("PathFinder/Dijkstra")]
+
+[node name="PathFinder" type="Node" parent="."]
+
+[node name="BFS" type="Node" parent="PathFinder"]
+script = ExtResource("2_f5ndb")
+
+[node name="A*" type="Node" parent="PathFinder"]
+script = ExtResource("3_wcs8m")
+
+[node name="JPS" type="Node" parent="PathFinder"]
+script = ExtResource("4_bpq5c")
+
+[node name="Dijkstra" type="Node" parent="PathFinder"]
+script = ExtResource("5_r2h77")
 
 [node name="BoardData" type="Node" parent="."]
-script = ExtResource("3_board") 
+script = ExtResource("6_kqncg")
+
+[node name="TileController" type="TileMapLayer" parent="." node_paths=PackedStringArray("tileMapLayer")]
+tile_set = SubResource("TileSet_y87cj")
+script = ExtResource("9_b5f5j")
+tileMapLayer = NodePath(".")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(802, 778)
+zoom = Vector2(0.5, 0.5)
+
+[node name="Tester" type="Node" parent="." node_paths=PackedStringArray("path_finding_manager", "board_data")]
+script = ExtResource("1_rjk3m")
+path_finding_manager = NodePath("..")
+board_data = NodePath("../BoardData")

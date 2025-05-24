@@ -34,6 +34,7 @@ func path(start : Vector2i, end : Vector2i, is_found : bool = false) -> Array[Ve
 			return []
 		paths.append(parent)
 		parent = parents[parent.y][parent.x]
+	print(len(paths))
 	return paths
 
 func stop_path_find():
