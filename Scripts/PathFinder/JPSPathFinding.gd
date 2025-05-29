@@ -70,7 +70,7 @@ func path_find(board_data : BoardData, _start : Vector2i, _end : Vector2i):
 		var pos = current[1]
 
 		if cost - heuristic(pos, end) > dp[pos.y][pos.x]: continue
-		await get_tree().create_timer(0.0001).timeout 
+		#await get_tree().create_timer(0.0001).timeout 
 		cost = dp[pos.y][pos.x]
 
 		for add in move_list:

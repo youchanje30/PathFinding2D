@@ -35,7 +35,8 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 		var pos = current[1]
 		
 		if cost > dp[pos.y][pos.x]: continue
-		
+		board_data.visit(pos.x, pos.y)
+
 		for add in move_list:
 			var next_pos = pos + add
 			if not board_data.can_visit(next_pos.x, next_pos.y): continue
@@ -52,6 +53,5 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 			
 			if next_pos == end: found = true; break
 			if is_stop: return
-			board_data.visit(next_pos.x, next_pos.y)
 
 	EventBus.emit_signal("path_finding_finished", found, path(start, end, found))

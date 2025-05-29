@@ -93,6 +93,7 @@ func set_cell(x: int, y: int, state: int, cost: int = 1):
 func remove_cell(x: int, y: int):
 	if not is_valid_position(x, y): return
 	board[y][x][0] = false
+	board[y][x][2] = 1
 	set_cell(x, y, TILE_EMPTY)
 	EventBus.emit_signal("cell_removed", x, y)
 

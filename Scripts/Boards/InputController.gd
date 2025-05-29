@@ -87,7 +87,7 @@ func _apply_wall(mouse_pos, is_create):
 
 func _apply_delete(mouse_pos):
 	var pos = get_position(mouse_pos)
-	EventBus.emit_signal("set_cell", pos.x, pos.y, TILE_EMPTY, 0)
+	EventBus.emit_signal("set_cell", pos.x, pos.y, TILE_EMPTY, 1)
 	while pos in vertex_pos: vertex_pos.erase(pos)
 
 func _find_path():
