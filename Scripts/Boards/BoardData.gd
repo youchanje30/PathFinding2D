@@ -110,6 +110,9 @@ func set_cost(x: int, y: int, cost: int):
 func can_visit(x : int, y : int) -> bool:
 	return is_valid_position(x, y) and not is_visited(x, y) and board[y][x][1] != TILE_WALL
 
+func wakable(x : int, y : int) -> bool:
+	return is_valid_position(x, y) and board[y][x][1] != TILE_WALL
+
 func visit(x : int, y : int):
 	board[y][x][0] = true
 	EventBus.emit_signal("cell_changed", x, y, TILE_PATH)
