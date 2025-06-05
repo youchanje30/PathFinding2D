@@ -13,8 +13,8 @@ var move_list : Array[Vector2i] = [
 	Vector2i(-1, 0)
 ]
 
-func heuristic(start : Vector2i, end : Vector2i) -> int:
-	return abs(start.x - end.x) + abs(start.y - end.y)
+func heuristic(a_pos : Vector2i, b_pos : Vector2i) -> int:
+	return abs(a_pos.x - b_pos.x) + abs(a_pos.y - b_pos.y)
 
 func init(max_x, max_y) -> void:
 	super.init(max_x, max_y)

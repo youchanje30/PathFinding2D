@@ -20,14 +20,14 @@ func heuristic(start : Vector2i, end : Vector2i) -> int:
 	return abs(start.x - end.x) + abs(start.y - end.y)
 
 func jump(board : BoardData, x:int, y:int, px:int, py:int)->Vector2i:
-	await get_tree().create_timer(0.0001).timeout 
+	#await get_tree().create_timer(0.0001).timeout 
 	
 	var dx = x - px
 	var dy = y - py
 	
 	if not board.wakable(x, y): return NVec
-	
 	if Vector2i(x, y) == end: return Vector2i(x, y)
+	
 	
 	if dx != 0:
 		if (board.wakable(x, y-1) and not board.wakable(x - dx, y-1)) or\
@@ -82,27 +82,30 @@ func path_find(board_data : BoardData, _start : Vector2i, _end : Vector2i):
 	
 	end = _end; start = _start
 	dp[start.y][start.x] = 0
-	board_data.visit(start.x, start.y)
-	
 	pq.push([heuristic(start, end), start])
 
 	while not pq.empty() and not found:
 		var current = pq.top(); pq.pop();
 		
 		var pos = current[1]
+		if pos == end: found = true; break
 		if current[0] - heuristic(pos, end) > dp[pos.y][pos.x]: continue
+		
+		
 		var g = current[0] - heuristic(end, pos)
+		board_data.visit(pos.x, pos.y)
 		
 		var x = pos.x
 		var y = pos.y
 		
 		var neighbors = findNeighbors(board_data, x, y)
+		
 		for neighbor in neighbors:
-			print(neighbor)
 			var nx = neighbor.x
 			var ny = neighbor.y
 			
 			var jumpPoint = await jump(board_data, nx, ny, x, y)
+			# await get_tree().create_timer(0.1).timeout 
 			if jumpPoint == NVec: continue
 			
 			parents[jumpPoint.y][jumpPoint.x] = pos
@@ -112,5 +115,22 @@ func path_find(board_data : BoardData, _start : Vector2i, _end : Vector2i):
 			
 			var f = ng + heuristic(jumpPoint, end)
 			pq.push([f, jumpPoint])
-
+	
+	if found: SetPath()
 	EventBus.emit_signal("path_finding_finished", found, path(start, end, found))
+
+
+func SetPath():
+	var cur : Vector2i = end
+	var target : Vector2i
+	while cur != start:
+		target = parents[cur.y][cur.x]
+		var dir = target - cur
+		dir.x = clampi(dir.x, -1, 1)
+		dir.y = clampi(dir.y, -1, 1)
+		while cur != target:
+			var next = cur + dir
+			parents[cur.y][cur.x] = next
+			cur = next
+	
+	
