@@ -4,6 +4,7 @@ extends IPathFindingStrategy
 const NVec = -Vector2i.ONE
 const INF = 999999999
 var dp = []
+var closed = []
 var pq = PriorityQueue.new()
 var found := false
 var end : Vector2i = Vector2i.ZERO
@@ -72,6 +73,8 @@ func findNeighbors(board : BoardData, x : int, y : int)->Array[Vector2i]:
 func init(max_x, max_y) -> void:
 	super.init(max_x, max_y)
 	set_array(dp, max_y, max_x, INF)
+	set_array(closed, max_y, max_x, false)
+	
 	pq = PriorityQueue.new()
 	pq.set_comparator(comparator.less_by_first)
 	found = false
@@ -90,7 +93,8 @@ func path_find(board_data : BoardData, _start : Vector2i, _end : Vector2i):
 		var pos = current[1]
 		if pos == end: found = true; break
 		if current[0] - heuristic(pos, end) > dp[pos.y][pos.x]: continue
-		
+		if closed[pos.y][pos.x]: continue
+		closed[pos.y][pos.x] = true
 		
 		var g = current[0] - heuristic(end, pos)
 		board_data.visit(pos.x, pos.y)
@@ -108,19 +112,20 @@ func path_find(board_data : BoardData, _start : Vector2i, _end : Vector2i):
 			# await get_tree().create_timer(0.1).timeout 
 			if jumpPoint == NVec: continue
 			
-			parents[jumpPoint.y][jumpPoint.x] = pos
 			var d = heuristic(jumpPoint, pos)
 			var ng = g + d
 			if ng > dp[jumpPoint.y][jumpPoint.x]: continue
 			
+			dp[jumpPoint.y][jumpPoint.x] = ng
+			parents[jumpPoint.y][jumpPoint.x] = pos
 			var f = ng + heuristic(jumpPoint, end)
 			pq.push([f, jumpPoint])
 	
-	if found: SetPath()
+	if found: SetPath(board_data)
 	EventBus.emit_signal("path_finding_finished", found, path(start, end, found))
 
 
-func SetPath():
+func SetPath(board : BoardData):
 	var cur : Vector2i = end
 	var target : Vector2i
 	while cur != start:
@@ -129,6 +134,7 @@ func SetPath():
 		dir.x = clampi(dir.x, -1, 1)
 		dir.y = clampi(dir.y, -1, 1)
 		while cur != target:
+			board.visit(cur.x, cur.y)
 			var next = cur + dir
 			parents[cur.y][cur.x] = next
 			cur = next

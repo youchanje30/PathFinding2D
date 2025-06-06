@@ -1,15 +1,15 @@
 [gd_scene load_steps=14 format=3 uid="uid://b6j8y8q7x4n6w"]
 
-[ext_resource type="Script" uid="uid://cnmxa6pb4er3o" path="res://Scripts/Boards/PathFindingManager.gd" id="1_1dmqw"]
-[ext_resource type="Script" uid="uid://oypcmoyw5vf" path="res://Scripts/Tests/PathFindingTest.gd" id="1_rjk3m"]
-[ext_resource type="Script" uid="uid://d8rale66tq0n" path="res://Scripts/PathFinder/BFSPathFinding.gd" id="2_f5ndb"]
-[ext_resource type="Script" uid="uid://clyloarr5iib3" path="res://Scripts/PathFinder/AstarPathFinding.gd" id="3_wcs8m"]
-[ext_resource type="Script" uid="uid://bhk1cm585222n" path="res://Scripts/PathFinder/JPSPathFinding.gd" id="4_bpq5c"]
-[ext_resource type="Script" uid="uid://tu38vm11t2v" path="res://Scripts/PathFinder/DijkstraPathFinding.gd" id="5_r2h77"]
-[ext_resource type="Script" uid="uid://cwt1y8oflwbjr" path="res://Scripts/Boards/BoardData.gd" id="6_kqncg"]
+[ext_resource type="Script" uid="uid://cqaae7fxlcf43" path="res://Scripts/Boards/PathFindingManager.gd" id="1_1dmqw"]
+[ext_resource type="Script" uid="uid://he5jnxqpp6h" path="res://Scripts/Tests/PathFindingTest.gd" id="1_rjk3m"]
+[ext_resource type="Script" uid="uid://blqo1lpya05u5" path="res://Scripts/PathFinder/BFSPathFinding.gd" id="2_f5ndb"]
+[ext_resource type="Script" uid="uid://3duxelt2n4eg" path="res://Scripts/PathFinder/AstarPathFinding.gd" id="3_wcs8m"]
+[ext_resource type="Script" uid="uid://bhjyoh7q6xib6" path="res://Scripts/PathFinder/JPSPathFinding.gd" id="4_bpq5c"]
+[ext_resource type="Script" uid="uid://cb1jae6dkx1se" path="res://Scripts/PathFinder/DijkstraPathFinding.gd" id="5_r2h77"]
+[ext_resource type="Script" uid="uid://dio537uep3u6x" path="res://Scripts/Boards/BoardData.gd" id="6_kqncg"]
 [ext_resource type="Texture2D" uid="uid://b1ne2y5ded8rc" path="res://Resources/Tilemap_Atlas.png" id="7_hsjo5"]
 [ext_resource type="Texture2D" uid="uid://bicr6jjglxw5i" path="res://Resources/Costable_Tilemap_Atlas.png" id="8_otbsi"]
-[ext_resource type="Script" uid="uid://y008w216h3af" path="res://Scripts/Boards/TileController.gd" id="9_b5f5j"]
+[ext_resource type="Script" uid="uid://covg1tnurwkq" path="res://Scripts/Boards/TileController.gd" id="9_b5f5j"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g2hib"]
 texture = ExtResource("7_hsjo5")

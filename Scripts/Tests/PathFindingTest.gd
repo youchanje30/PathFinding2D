@@ -147,9 +147,9 @@ func _on_path_finding_finished(success: bool, path: Array):
 		path_lengths[current_algo] = "No path"
 	
 	# Clear visited cells and path
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.05).timeout
 	EventBus.emit_signal("clear_visited_and_route")
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.05).timeout
 	current_test_index += 1
 	test_next_algorithm()
 
