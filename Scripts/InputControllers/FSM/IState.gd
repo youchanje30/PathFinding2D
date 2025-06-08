@@ -1,11 +1,11 @@
 extends Node
 class_name IState
 
-var controller : InputController
+var controller : StateController
 
-func init(p : InputController):
+func init(p : StateController):
 	controller = p
 
 func enter(event): pass
 func update(event): pass
-func exit(event): pass
+func exit(): pass

@@ -8,6 +8,7 @@ const TILE_START_END = 3
 const TILE_ROUTE = 4
 
 @export var tileMapLayer : TileMapLayer
+@export var state_controller : StateController
 
 var is_left_dragging := false
 var mode := 2 # 1: 시작/도착점, 2: 벽, 3: 가중치
@@ -23,18 +24,21 @@ func _ready():
 	EventBus.connect("path_removed", Callable(self, "_on_path_removed"))
 
 func _unhandled_input(event):
-	# space(경로 탐색)만 항상 허용, 그 외 입력은 can_fix이 true일 때만 허용
-	if event is InputEventKey and event.pressed and event.keycode == KEY_SPACE:
-		_handle_key_input(event)
-		return
-	if not can_fix:
-		return
-	if event is InputEventKey and event.pressed:
-		_handle_key_input(event)
-	elif event is InputEventMouseButton:
-		_handle_mouse_button(event)
-	elif event is InputEventMouseMotion: # and is_left_dragging:
-		_handle_mouse_motion(event)
+	# 입력 이벤트를 StateController에 위임
+	if state_controller:
+		state_controller.handle_input(event)
+	# 기존 직접 분기 로직은 상태 패턴으로 대체
+	# if event is InputEventKey and event.pressed and event.keycode == KEY_SPACE:
+	# 	_handle_key_input(event)
+	# 	return
+	# if not can_fix:
+	# 	return
+	# if event is InputEventKey and event.pressed:
+	# 	_handle_key_input(event)
+	# elif event is InputEventMouseButton:
+	# 	_handle_mouse_button(event)
+	# elif event is InputEventMouseMotion: # and is_left_dragging:
+	# 	_handle_mouse_motion(event)
 
 func _handle_key_input(event):
 	match event.keycode:

@@ -1,18 +1,20 @@
 extends IState
 
 func enter(event):
-	controller.can_fix = false
-	controller._find_path()
+	controller.input.can_fix = false
+	controller.find_path()
 
 func update(event):
-	if event.keycode == KEY_SPACE and event.pressed:
-		# controller.change_state(controlle)
+	if controller.input.can_fix:
+		controller.change_state(controller.STATE_IDLE)
 		return
 	
-	if controller.can_fix:
-		# controller.change_state(controlle)
+	if event is not InputEventKey:
 		return
+
+	if event.keycode == KEY_SPACE and event.pressed:
+		controller.change_state(controller.STATE_IDLE)
 		
 
-func exit(event):
-	controller.can_fix = true
+func exit():
+	controller.input.can_fix = true

@@ -1,13 +1,18 @@
-[gd_scene load_steps=15 format=3 uid="uid://dqmcrbu60fqrr"]
+[gd_scene load_steps=20 format=3 uid="uid://dqmcrbu60fqrr"]
 
 [ext_resource type="Script" uid="uid://drg3vqsbdxqnv" path="res://Scripts/InputControllers/InputController.gd" id="1_khmu4"]
 [ext_resource type="Script" uid="uid://csfx0vroabs8" path="res://Scripts/Boards/PathFindingManager.gd" id="1_ti74c"]
 [ext_resource type="Script" uid="uid://brkfvt3krgrq0" path="res://Scripts/Boards/BoardData.gd" id="2_g1fwc"]
+[ext_resource type="Script" uid="uid://bfjvtascsjs0" path="res://Scripts/InputControllers/FSM/StateController.gd" id="2_vtqva"]
+[ext_resource type="Script" uid="uid://d3x0pgmm23su6" path="res://Scripts/InputControllers/FSM/IdleState.gd" id="3_dfhxm"]
 [ext_resource type="Texture2D" uid="uid://b1ne2y5ded8rc" path="res://Resources/Tilemap_Atlas.png" id="3_m1b2c"]
+[ext_resource type="Script" uid="uid://dlpgvcgbarkp7" path="res://Scripts/InputControllers/FSM/Generate.gd" id="4_k83sj"]
 [ext_resource type="Texture2D" uid="uid://bicr6jjglxw5i" path="res://Resources/Costable_Tilemap_Atlas.png" id="4_m1b2c"]
 [ext_resource type="Script" uid="uid://iwam4d8v2xld" path="res://Scripts/Boards/TileController.gd" id="4_ti74c"]
+[ext_resource type="Script" uid="uid://cw6so8bwb768f" path="res://Scripts/InputControllers/FSM/InPlay.gd" id="4_vyokh"]
 [ext_resource type="Script" uid="uid://ddodfpf2ji68o" path="res://Scripts/PathFinder/BFSPathFinding.gd" id="5_oc7cq"]
 [ext_resource type="Script" uid="uid://i4dl2yjhnj1y" path="res://Scripts/PathFinder/DFSPathFinding.gd" id="6_vtqva"]
+[ext_resource type="Script" uid="uid://p5bib5ypytsx" path="res://Scripts/InputControllers/FSM/Remove.gd" id="6_x48qp"]
 [ext_resource type="Script" uid="uid://cy36fld3r6mj3" path="res://Scripts/PathFinder/AstarPathFinding.gd" id="7_dfhxm"]
 [ext_resource type="Script" uid="uid://b1v0g56sguckc" path="res://Scripts/PathFinder/DijkstraPathFinding.gd" id="8_g1fwc"]
 [ext_resource type="Script" uid="uid://cl4yt6jcyl7w0" path="res://Scripts/PathFinder/JPSPathFinding.gd" id="11_oc7cq"]
@@ -44,6 +49,23 @@ sources/1 = SubResource("TileSetAtlasSource_m1b2c")
 [node name="PathFinding2D" type="Node" node_paths=PackedStringArray("path_finding_strategys")]
 script = ExtResource("1_ti74c")
 path_finding_strategys = [NodePath("PathFindings/DFS"), NodePath("PathFindings/BFS"), NodePath("PathFindings/Dijkstra"), NodePath("PathFindings/AStar"), NodePath("PathFindings/JPS")]
+
+[node name="StateController" type="Node" parent="." node_paths=PackedStringArray("input", "states")]
+script = ExtResource("2_vtqva")
+input = NodePath("../InputController")
+states = [NodePath("IdleState"), NodePath("Generate"), NodePath("Remove"), NodePath("InPlay")]
+
+[node name="IdleState" type="Node" parent="StateController"]
+script = ExtResource("3_dfhxm")
+
+[node name="Generate" type="Node" parent="StateController"]
+script = ExtResource("4_k83sj")
+
+[node name="Remove" type="Node" parent="StateController"]
+script = ExtResource("6_x48qp")
+
+[node name="InPlay" type="Node" parent="StateController"]
+script = ExtResource("4_vyokh")
 
 [node name="InputController" type="Node" parent="." node_paths=PackedStringArray("tileMapLayer")]
 script = ExtResource("1_khmu4")
