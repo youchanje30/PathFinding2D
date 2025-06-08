@@ -49,6 +49,7 @@ func _handle_key_input(event):
 			_find_path()
 
 func _handle_mouse_button(event):
+	print(event.button_index, event.pressed)
 	if event.button_index == MOUSE_BUTTON_LEFT:
 		is_left_dragging = event.pressed
 		if mode == 1 and is_left_dragging:
