@@ -28,7 +28,7 @@ func jump(board : BoardData, x:int, y:int, px:int, py:int)->Vector2i:
 	
 	if not board.wakable(x, y): return NVec
 	if Vector2i(x, y) == end: return Vector2i(x, y)
-	
+	# board.visit(x, y)
 	
 	if dx != 0:
 		if (board.wakable(x, y-1) and not board.wakable(x - dx, y-1)) or\
@@ -109,7 +109,7 @@ func path_find(board_data : BoardData, _start : Vector2i, _end : Vector2i):
 			var ny = neighbor.y
 			
 			var jumpPoint = await jump(board_data, nx, ny, x, y)
-			# await get_tree().create_timer(0.1).timeout 
+			# await get_tree().create_timer(0.05).timeout 
 			if jumpPoint == NVec: continue
 			
 			var d = heuristic(jumpPoint, pos)

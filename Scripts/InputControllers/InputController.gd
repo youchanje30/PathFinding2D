@@ -1,5 +1,5 @@
 extends Node
-
+class_name InputController
 # BoardData와 동일한 상수 정의
 const TILE_EMPTY = 1
 const TILE_WALL = -1
@@ -33,7 +33,7 @@ func _unhandled_input(event):
 		_handle_key_input(event)
 	elif event is InputEventMouseButton:
 		_handle_mouse_button(event)
-	elif event is InputEventMouseMotion and is_left_dragging:
+	elif event is InputEventMouseMotion: # and is_left_dragging:
 		_handle_mouse_motion(event)
 
 func _handle_key_input(event):
@@ -63,7 +63,11 @@ func _handle_mouse_button(event):
 	elif mode == 3:
 		_apply_weight(event.position)
 
-func _handle_mouse_motion(event):
+func _handle_mouse_motion(event : InputEventMouseMotion):
+	if event.is_action_released("mouse_right", true):
+		_apply_delete(event.position)
+		print(1)
+	if not is_left_dragging: return
 	if mode == 2:
 		_apply_wall(event.position, true)
 	elif mode == 3:
