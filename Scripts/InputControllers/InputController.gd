@@ -27,18 +27,9 @@ func _unhandled_input(event):
 	# 입력 이벤트를 StateController에 위임
 	if state_controller:
 		state_controller.handle_input(event)
-	# 기존 직접 분기 로직은 상태 패턴으로 대체
-	# if event is InputEventKey and event.pressed and event.keycode == KEY_SPACE:
-	# 	_handle_key_input(event)
-	# 	return
-	# if not can_fix:
-	# 	return
-	# if event is InputEventKey and event.pressed:
-	# 	_handle_key_input(event)
-	# elif event is InputEventMouseButton:
-	# 	_handle_mouse_button(event)
-	# elif event is InputEventMouseMotion: # and is_left_dragging:
-	# 	_handle_mouse_motion(event)
+		
+	if not can_fix: return
+	if event is InputEventKey and event.pressed: _handle_key_input(event)
 
 func _handle_key_input(event):
 	match event.keycode:
@@ -49,34 +40,8 @@ func _handle_key_input(event):
 		KEY_3:
 			mode = 3
 			weight_value = (weight_value + 1) % 9
-		KEY_SPACE:
-			_find_path()
-
-func _handle_mouse_button(event):
-	print(event.button_index, event.pressed)
-	if event.button_index == MOUSE_BUTTON_LEFT:
-		is_left_dragging = event.pressed
-		if mode == 1 and is_left_dragging:
-			_apply_start_end(event.position)
-	elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-		_apply_delete(event.position)
-
-	if not is_left_dragging: return
-
-	if mode == 2:
-		_apply_wall(event.position, true)
-	elif mode == 3:
-		_apply_weight(event.position)
-
-func _handle_mouse_motion(event : InputEventMouseMotion):
-	if event.is_action_released("mouse_right", true):
-		_apply_delete(event.position)
-		print(1)
-	if not is_left_dragging: return
-	if mode == 2:
-		_apply_wall(event.position, true)
-	elif mode == 3:
-		_apply_weight(event.position)
+		#KEY_SPACE:
+			#_find_path()
 
 func _apply_start_end(mouse_pos):
 	var pos = get_position(mouse_pos)

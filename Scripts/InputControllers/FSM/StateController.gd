@@ -19,6 +19,7 @@ func _ready():
 
 func handle_input(event):
 	if not current_state: change_state(STATE_IDLE)
+
 	current_state.update(event)
 
 func change_state(new_state : int, event = null):
@@ -54,4 +55,7 @@ func apply_delete(mouse_pos):
 func get_position(mouse_pos):
 	if input: return input.get_position(mouse_pos)
 	return null
+
+func get_mode():
+	return input.mode
 #endregion
