@@ -21,7 +21,7 @@ func init(max_x, max_y) -> void:
 	set_array(dp, max_y, max_x, INF)
 
 
-func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
+func path_find(board_data : BoardData, start : Vector2i, end : Vector2i, is_delay : bool = false):
 	EventBus.emit_signal("path_finding_started")
 	init(board_data.max_x, board_data.max_y)
 	var pq = PriorityQueue.new()
@@ -37,6 +37,7 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 		var f = current[0]
 		var pos = current[1]
 		var g = f - heuristic(pos, end)
+
 		if g > dp[pos.y][pos.x]: continue
 		board_data.visit(pos.x, pos.y)
 
@@ -46,13 +47,13 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 
 			var cell_weight = board_data.get_cost(next_pos.x, next_pos.y)
 			if g + cell_weight >= dp[next_pos.y][next_pos.x]: continue
-			# await get_tree().create_timer(0.001).timeout
+			if is_delay: await get_tree().create_timer(0.001).timeout
 
 			dp[next_pos.y][next_pos.x] = g + cell_weight
 			parents[next_pos.y][next_pos.x] = pos
 			pq.push([dp[next_pos.y][next_pos.x] + heuristic(next_pos, end), next_pos])
 
-			if next_pos == end: found = true; continue
+			if next_pos == end: found = true; break
 			if is_stop: return
 
 	EventBus.emit_signal("path_finding_finished", found, path(start, end, found))

@@ -8,7 +8,7 @@ var move_list : Array[Vector2i] = [
 	Vector2i(-1, 0)
 ]
 
-func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
+func path_find(board_data : BoardData, start : Vector2i, end : Vector2i, is_delay : bool = false):
 	EventBus.emit_signal("path_finding_started")
 	init(board_data.max_x, board_data.max_y)
 	var queue : Array = [start]
@@ -21,7 +21,7 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 			var next = current + move
 			if not board_data.can_visit(next.x, next.y): continue
 
-			#await get_tree().create_timer(0.001).timeout
+			if is_delay: await get_tree().create_timer(0.001).timeout
 
 			queue.append(next)
 			parents[next.y][next.x] = current

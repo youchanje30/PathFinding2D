@@ -36,6 +36,7 @@ signal vertex_pos_changed(vertex_pos) # 시작/도착점 목록이 변경됨 (�
 signal board_reset() # 보드가 리셋됨
 signal board_initialized(max_x, max_y) # 보드가 새로 생성됨
 signal path_finding_strategy_changed(strategy) # 경로 탐색 전략 변경됨
+signal delay_strategy_changed(strategy) # 탐색 딜레이 전략 변경됨
 
 # --- has_route 질의/응답 신호 ---
 signal request_has_route() # has_route 질의

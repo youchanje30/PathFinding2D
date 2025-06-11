@@ -1,21 +1,21 @@
 [gd_scene load_steps=20 format=3 uid="uid://dqmcrbu60fqrr"]
 
-[ext_resource type="Script" uid="uid://bvpxaveimo5pp" path="res://Scripts/InputControllers/InputController.gd" id="1_khmu4"]
-[ext_resource type="Script" uid="uid://cdd6cvklo1jaf" path="res://Scripts/Boards/PathFindingManager.gd" id="1_ti74c"]
-[ext_resource type="Script" uid="uid://bkg23y6r53fn5" path="res://Scripts/Boards/BoardData.gd" id="2_g1fwc"]
-[ext_resource type="Script" uid="uid://eyh3bbohwl7f" path="res://Scripts/InputControllers/FSM/StateController.gd" id="2_vtqva"]
-[ext_resource type="Script" uid="uid://b36qsq5ygqif6" path="res://Scripts/InputControllers/FSM/IdleState.gd" id="3_dfhxm"]
+[ext_resource type="Script" uid="uid://8o3dtwokdxyr" path="res://Scripts/InputControllers/InputController.gd" id="1_khmu4"]
+[ext_resource type="Script" uid="uid://dao5jl04mlrrw" path="res://Scripts/Boards/PathFindingManager.gd" id="1_ti74c"]
+[ext_resource type="Script" uid="uid://ckeduek6xs5kw" path="res://Scripts/Boards/BoardData.gd" id="2_g1fwc"]
+[ext_resource type="Script" uid="uid://cba4uskijvyp2" path="res://Scripts/InputControllers/FSM/StateController.gd" id="2_vtqva"]
+[ext_resource type="Script" uid="uid://ddxmtsty5ppql" path="res://Scripts/InputControllers/FSM/IdleState.gd" id="3_dfhxm"]
 [ext_resource type="Texture2D" uid="uid://b1ne2y5ded8rc" path="res://Resources/Tilemap_Atlas.png" id="3_m1b2c"]
-[ext_resource type="Script" uid="uid://1j6u8y0ape8c" path="res://Scripts/InputControllers/FSM/Generate.gd" id="4_k83sj"]
+[ext_resource type="Script" uid="uid://blarja4lrq4bt" path="res://Scripts/InputControllers/FSM/Generate.gd" id="4_k83sj"]
 [ext_resource type="Texture2D" uid="uid://bicr6jjglxw5i" path="res://Resources/Costable_Tilemap_Atlas.png" id="4_m1b2c"]
-[ext_resource type="Script" uid="uid://d284kyp76yb78" path="res://Scripts/Boards/TileController.gd" id="4_ti74c"]
-[ext_resource type="Script" uid="uid://btfcw1t2shuea" path="res://Scripts/InputControllers/FSM/InPlay.gd" id="4_vyokh"]
-[ext_resource type="Script" uid="uid://ccbocjldpt030" path="res://Scripts/PathFinder/BFSPathFinding.gd" id="5_oc7cq"]
-[ext_resource type="Script" uid="uid://cdkx644da2u4f" path="res://Scripts/PathFinder/DFSPathFinding.gd" id="6_vtqva"]
-[ext_resource type="Script" uid="uid://cpgqj8nwb3jsa" path="res://Scripts/InputControllers/FSM/Remove.gd" id="6_x48qp"]
-[ext_resource type="Script" uid="uid://bnekhrv0rj03w" path="res://Scripts/PathFinder/AstarPathFinding.gd" id="7_dfhxm"]
-[ext_resource type="Script" uid="uid://beiwo2tfk3n0j" path="res://Scripts/PathFinder/DijkstraPathFinding.gd" id="8_g1fwc"]
-[ext_resource type="Script" uid="uid://cpkk4awl4gibe" path="res://Scripts/PathFinder/JPSPathFinding.gd" id="11_oc7cq"]
+[ext_resource type="Script" uid="uid://b1gmxuqejlvb" path="res://Scripts/Boards/TileController.gd" id="4_ti74c"]
+[ext_resource type="Script" uid="uid://ci87hd6d0o6up" path="res://Scripts/InputControllers/FSM/InPlay.gd" id="4_vyokh"]
+[ext_resource type="Script" uid="uid://dx4pjqo7bl5xw" path="res://Scripts/PathFinder/BFSPathFinding.gd" id="5_oc7cq"]
+[ext_resource type="Script" uid="uid://b8ryomvke6u6b" path="res://Scripts/PathFinder/DFSPathFinding.gd" id="6_vtqva"]
+[ext_resource type="Script" uid="uid://bcqqxg5ymhni3" path="res://Scripts/InputControllers/FSM/Remove.gd" id="6_x48qp"]
+[ext_resource type="Script" uid="uid://chi6100wr0p85" path="res://Scripts/PathFinder/AstarPathFinding.gd" id="7_dfhxm"]
+[ext_resource type="Script" uid="uid://dvpklw136bb0w" path="res://Scripts/PathFinder/DijkstraPathFinding.gd" id="8_g1fwc"]
+[ext_resource type="Script" uid="uid://dxyi0iubttwv0" path="res://Scripts/PathFinder/JPSPathFinding.gd" id="11_oc7cq"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_43afh"]
 texture = ExtResource("3_m1b2c")
@@ -111,6 +111,21 @@ popup/item_3/id = 3
 popup/item_4/text = "JPS"
 popup/item_4/id = 4
 
+[node name="SelectDelay" type="OptionButton" parent="UI"]
+layout_mode = 0
+offset_left = 116.0
+offset_top = 9.0
+offset_right = 199.0
+offset_bottom = 40.0
+focus_mode = 0
+toggle_mode = false
+selected = 0
+item_count = 2
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Step"
+popup/item_1/id = 1
+
 [node name="PathFindings" type="Node" parent="."]
 
 [node name="BFS" type="Node" parent="PathFindings"]
@@ -129,3 +144,4 @@ script = ExtResource("8_g1fwc")
 script = ExtResource("11_oc7cq")
 
 [connection signal="item_selected" from="UI/SelectPathFinding" to="." method="_on_select_path_finding_item_selected"]
+[connection signal="item_selected" from="UI/SelectDelay" to="." method="_on_select_delay_item_selected"]

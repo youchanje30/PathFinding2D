@@ -12,3 +12,7 @@ func _on_select_path_finding_item_selected(index: int) -> void:
 
 func change_path_finding_strategy(index : int):
 	EventBus.emit_signal("path_finding_strategy_changed", path_finding_strategys[index])
+
+
+func _on_select_delay_item_selected(index: int) -> void:
+	EventBus.emit_signal("delay_strategy_changed", index)

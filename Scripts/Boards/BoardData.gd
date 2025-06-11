@@ -19,6 +19,8 @@ const TILE_ROUTE = 4
 
 var board : Array[Array] = []
 
+var is_delay : bool = false
+
 signal cell_changed(x, y, value)
 signal path_finding_started()
 
@@ -32,7 +34,7 @@ func _ready():
 	EventBus.connect("request_cell_cost", Callable(self, "_on_request_cell_cost"))
 	EventBus.connect("disable_visit", Callable(self, "_on_disable_visit"))
 	EventBus.connect("path_finding_finished", Callable(self, "_on_path_finding_finished"))
-	
+	EventBus.connect("delay_strategy_changed", Callable(self, "_on_set_delay"))
 
 func _on_set_cell(x, y, value, cost):
 	set_cell(x, y, value, cost)
@@ -127,7 +129,7 @@ func get_cost(x : int, y : int) -> int:
 func path_find(start : Vector2, end : Vector2):
 	board[start.y][start.x][0] = true
 	path_finding_strategy.enable_path_find()
-	path_finding_strategy.path_find(self, start, end)
+	path_finding_strategy.path_find(self, start, end, is_delay)
 
 func change_path_find_strategy(strategy : IPathFindingStrategy):
 	path_finding_strategy = strategy
@@ -139,4 +141,8 @@ func draw_path(path : Array[Vector2i]):
 
 func _on_path_finding_finished(success : bool, path : Array[Vector2i]):
 	if success: draw_path(path)
+
+func _on_set_delay(strategy : int):
+	is_delay = strategy == 1
+
 #endregion

@@ -18,7 +18,7 @@ func set_array(arr : Array, r : int, size : int, val):
 func init(max_x : int, max_y : int):
 	set_array(parents, max_y, max_x, Vector2i(-1, -1))
 
-func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
+func path_find(board_data : BoardData, start : Vector2i, end : Vector2i, is_delay : bool = false):
 	init(board_data.max_x, board_data.max_y)
 	board_data.draw_path(path(start, end, false))
 

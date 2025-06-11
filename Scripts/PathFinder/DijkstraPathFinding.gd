@@ -18,7 +18,7 @@ func init(max_x, max_y) -> void:
 	set_array(dp, max_y, max_x, INF)
 
 
-func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
+func path_find(board_data : BoardData, start : Vector2i, end : Vector2i, is_delay : bool = false):
 	EventBus.emit_signal("path_finding_started")
 	init(board_data.max_x, board_data.max_y)
 	var pq = PriorityQueue.new()
@@ -31,10 +31,10 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 	while not pq.empty() and not found:
 		var current = pq.top(); pq.pop()
 
-		var cost = current[0]
+		var dist = current[0]
 		var pos = current[1]
 		
-		if cost > dp[pos.y][pos.x]: continue
+		if dist > dp[pos.y][pos.x]: continue
 		board_data.visit(pos.x, pos.y)
 
 		for add in move_list:
@@ -42,14 +42,12 @@ func path_find(board_data : BoardData, start : Vector2i, end : Vector2i):
 			if not board_data.can_visit(next_pos.x, next_pos.y): continue
 			
 			var cell_weight = board_data.get_cost(next_pos.x, next_pos.y)
-			if cost + cell_weight >= dp[next_pos.y][next_pos.x]: continue
+			if dist + cell_weight >= dp[next_pos.y][next_pos.x]: continue
+			if is_delay: await get_tree().create_timer(0.001).timeout
 
-			# await get_tree().create_timer(0.001).timeout
-
-			var next_cost = cost + cell_weight
-			dp[next_pos.y][next_pos.x] = next_cost
-			pq.push([next_cost, next_pos])
+			dp[next_pos.y][next_pos.x] = dist + cell_weight
 			parents[next_pos.y][next_pos.x] = pos
+			pq.push([dp[next_pos.y][next_pos.x], next_pos])
 			
 			if next_pos == end: found = true; break
 			if is_stop: return

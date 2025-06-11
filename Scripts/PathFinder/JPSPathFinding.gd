@@ -79,7 +79,7 @@ func init(max_x, max_y) -> void:
 	pq.set_comparator(comparator.less_by_first)
 	found = false
 
-func path_find(board_data : BoardData, _start : Vector2i, _end : Vector2i):
+func path_find(board_data : BoardData, _start : Vector2i, _end : Vector2i, is_delay : bool = false):
 	EventBus.emit_signal("path_finding_started")
 	init(board_data.max_x, board_data.max_y)
 	
@@ -99,17 +99,16 @@ func path_find(board_data : BoardData, _start : Vector2i, _end : Vector2i):
 		var g = current[0] - heuristic(end, pos)
 		board_data.visit(pos.x, pos.y)
 		
-		var x = pos.x
-		var y = pos.y
-		
-		var neighbors = findNeighbors(board_data, x, y)
+		var neighbors = findNeighbors(board_data, pos.x, pos.y)
 		
 		for neighbor in neighbors:
 			var nx = neighbor.x
 			var ny = neighbor.y
 			
-			var jumpPoint = await jump(board_data, nx, ny, x, y)
-			# await get_tree().create_timer(0.05).timeout 
+			var jumpPoint = await jump(board_data, nx, ny, pos.x, pos.y)
+
+
+			if is_delay: await get_tree().create_timer(0.05).timeout 
 			if jumpPoint == NVec: continue
 			
 			var d = heuristic(jumpPoint, pos)
